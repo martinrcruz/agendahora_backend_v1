@@ -72,6 +72,7 @@ class Auth extends CI_Controller
 
 		if ($this->form_validation->run() === TRUE)
 		{
+
 			// check to see if the user is logging in
 			// check for "remember me"
 			$remember = (bool)$this->input->post('remember');

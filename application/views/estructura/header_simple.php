@@ -44,7 +44,7 @@
 	<![endif]-->
 
     <?php
-
+header('Access-Control-Allow-Origin: *'); 
     if (array_key_exists('libcss', $datalibrary)) {
         foreach ($datalibrary['libcss'] as $vista) {
             $this->load->view($vista);

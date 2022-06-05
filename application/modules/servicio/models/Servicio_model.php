@@ -1,13 +1,14 @@
 <?php
-class Agenda_model extends CI_Model
+
+class Servicio_model extends CI_Model
 {
     public function __construct()
     {
         parent::__construct();
     }
-    public function getHoraAgenda($where='')
+    public function getServicio($where='')
     {
-        $sql = "SELECT * FROM hora_agenda WHERE ESTADO=1 $where;";
+        $sql = "SELECT * FROM servicio WHERE ESTADO=1 $where;";
         $query = $this->db->query($sql);
         //var_dump($this->db->last_query());
 
@@ -17,7 +18,7 @@ class Agenda_model extends CI_Model
             return false;
     }
 
-    public function insertHoraAgenda($tabla, $data)
+    public function insertServicio($tabla, $data)
     {
         $query = $this->db->insert($tabla, $data);
 		if ($query)
@@ -25,7 +26,7 @@ class Agenda_model extends CI_Model
 		else
 			return false;
     }
-    public function updateHoraAgenda($tabla, $comparar, $datos, $id)
+    public function updateServicio($tabla, $comparar, $datos, $id)
     {
     	$this->db->where($comparar, $id);
 		$result = $this->db->update($tabla, $datos);
@@ -34,6 +35,5 @@ class Agenda_model extends CI_Model
 		else
 			return false;
     }
-
 
 }

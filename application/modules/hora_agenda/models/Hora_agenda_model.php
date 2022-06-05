@@ -1,5 +1,6 @@
 <?php
-class Agenda_model extends CI_Model
+
+class Hora_agenda_model extends CI_Model
 {
     public function __construct()
     {
@@ -16,6 +17,7 @@ class Agenda_model extends CI_Model
         else
             return false;
     }
+
 
     public function insertHoraAgenda($tabla, $data)
     {

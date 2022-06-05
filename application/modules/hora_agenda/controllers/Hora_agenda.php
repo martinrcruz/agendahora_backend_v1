@@ -1,12 +1,12 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Agenda extends CI_Controller
+class Hora_agenda extends CI_Controller
 {
     function __construct()
     {
         parent::__construct();
-        $this->load->model('agenda_model');
+        $this->load->model('hora_agenda_model');
         $this->load->library(['ion_auth', 'form_validation']);
 
         date_default_timezone_set('America/Santiago');
@@ -20,65 +20,17 @@ class Agenda extends CI_Controller
         } else {
 
             $data['datalibrary'] = array(
-                'titulo' => "Agenda",
+                'titulo' => "Hora_agenda",
                 'vista' => array('index', 'modals'),
                 'libjs' => array('libjs'),
-                'active' => 'agenda'
+                'active' => 'hora_agenda'
             );
             $this->load->view('estructura/body', $data);
         }
     }
-
-
-    public function getHoraAgenda()
-    {
-        // if ($this->ion_auth->logged_in()) {
-
-        if (true) {
-            //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
-            $request = new stdClass();
-            $request->id = null;
-            $request->data = [];
-
-			$fecha = date('Y-m-d H:i:s');
-
-            //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [RESPUESTA]
-            $response = new stdClass();
-            $response->id = null;
-            $response->data = [];
-            $response->proceso = 0;
-            $response->errores = [];
-
-            if ($query = $this->agenda_model->getHoraAgenda()) {
-                foreach ($query->result() as $res) {
-                    $row = null;
-                    $row = new stdClass();
-                    $row->id_hora_agenda = $res->id_hora_agenda;
-                    $row->id_servicio = $res->id_servicio;
-                    $row->nombre = $res->nombre;
-                    $row->descripcion = $res->descripcion;
-                    $row->fecha_entrada = $res->fecha_entrada;
-                    $row->fecha_salida = $res->fecha_salida;
-                    $row->id_usuario_tecnico = $res->id_usuario_tecnico;
-                    $row->id_cliente = $res->id_cliente;
-                    $row->id_vehiculo = $res->id_vehiculo;
-                    $row->id_usuario_cargo = $res->id_usuario_cargo;
-                    $row->fecha_creacion = $res->fecha_creacion;
-
-                    array_push($response->data, $row);
-                }
-            }
-            echo json_encode($response);
-        } else {
-            redirect('auth/login', 'refresh');
-        }
-    }
-
-
-
     public function getHoraAgendaById()
     {
-        if (true) {
+        if ($this->ion_auth->logged_in()) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -107,7 +59,7 @@ class Agenda extends CI_Controller
 
 
             if (sizeof($response->errores) == 0) {
-                if ($query = $this->agenda_model->getHoraAgenda($where)) {
+                if ($query = $this->hora_agenda_model->getHoraAgenda($where)) {
                     foreach ($query->result() as $res) {
                         $row = null;
                         $row = new stdClass();
@@ -132,12 +84,51 @@ class Agenda extends CI_Controller
             redirect('auth/login', 'refresh');
         }
     }
+    public function getHoraAgenda()
+    {
+        if ($this->ion_auth->logged_in()) {
+            //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
+            $request = new stdClass();
+            $request->id = null;
+            $request->data = [];
 
+			$fecha = date('Y-m-d H:i:s');
 
+            //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [RESPUESTA]
+            $response = new stdClass();
+            $response->id = null;
+            $response->data = [];
+            $response->proceso = 0;
+            $response->errores = [];
+
+            if ($query = $this->hora_agenda_model->getHoraAgenda()) {
+                foreach ($query->result() as $res) {
+                    $row = null;
+                    $row = new stdClass();
+                    $row->id_hora_agenda = $res->id_hora_agenda;
+                    $row->id_servicio = $res->id_servicio;
+                    $row->nombre = $res->nombre;
+                    $row->descripcion = $res->descripcion;
+                    $row->fecha_entrada = $res->fecha_entrada;
+                    $row->fecha_salida = $res->fecha_salida;
+                    $row->id_usuario_tecnico = $res->id_usuario_tecnico;
+                    $row->id_cliente = $res->id_cliente;
+                    $row->id_vehiculo = $res->id_vehiculo;
+                    $row->id_usuario_cargo = $res->id_usuario_cargo;
+                    $row->fecha_creacion = $res->fecha_creacion;
+
+                    array_push($response->data, $row);
+                }
+            }
+            echo json_encode($response);
+        } else {
+            redirect('auth/login', 'refresh');
+        }
+    }
 
     public function insertHoraAgenda()
     {
-        if (true) {
+        if ($this->ion_auth->logged_in()) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -155,8 +146,8 @@ class Agenda extends CI_Controller
 
 
 
-            /**** CUANDO NO RECIBAMOS UN ID COMO FOREIGN KEY, DEBEMOS ASIGNARLE UN ERROR AL PROCESO, 
-        PARA QUE NO HAGA LA INSERCION, DEBIDO A QUE EN LA BASE DE DATOS, ESTOS CAMPOS SON NOT NULL ****/
+            /** CUANDO NO RECIBAMOS UN ID COMO FOREIGN KEY, DEBEMOS ASIGNARLE UN ERROR AL PROCESO, 
+        PARA QUE NO HAGA LA INSERCION, DEBIDO A QUE EN LA BASE DE DATOS, ESTOS CAMPOS SON NOT NULL **/
 
             //VERIFICAMOS LAS VARIABLES QUE RECIBIMOS PARA EDITAR.
             if (!empty($this->input->post('id_servicio'))) {
@@ -222,7 +213,7 @@ class Agenda extends CI_Controller
             );
 
             //INSERCION, ACTUALIZACION U OPERACIONES
-            if ($query = $this->agenda_model->insertHoraAgenda('hora_agenda', $datos)) {
+            if ($query = $this->hora_agenda_model->insertHoraAgenda('hora_agenda', $datos)) {
                 $response->proceso = 1;
                 $response->id = $query;
                 $response->data = $datos;
@@ -235,12 +226,9 @@ class Agenda extends CI_Controller
             redirect('auth/login', 'refresh');
         }
     }
-
-
-
     public function updateHoraAgenda()
     {
-        if (true) {
+        if ($this->ion_auth->logged_in()) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -314,7 +302,7 @@ class Agenda extends CI_Controller
 
             //SI ES QUE NO HAY ERRORES, PROCEDEMOS A HACER LA PETICION MEDIANTE UN LLAMADO A LA FUNCION DEL MODELO.
             if (sizeof($response->errores) == 0) {
-                if ($query = $this->agenda_model->updateHoraAgenda('hora_agenda', 'id_hora_agenda', $datos, $request->id)) {
+                if ($query = $this->hora_agenda_model->updateHoraAgenda('hora_agenda', 'id_hora_agenda', $datos, $request->id)) {
                     //SI EL PROCESO ES EXITOSO, DEVOLVERA UN VALOR DENTRO DEL ARRAY DE RESPUESTA IGUAL A 1
                     $response->proceso = 1;
                     $response->id = $query;
@@ -329,12 +317,9 @@ class Agenda extends CI_Controller
             redirect('auth/login', 'refresh');
         }
     }
-
-
-
     public function deleteHoraAgenda()
     {
-        if (true) {
+        if ($this->ion_auth->logged_in()) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -358,7 +343,7 @@ class Agenda extends CI_Controller
 
             //SI ES QUE NO HAY ERRORES, PROCEDEMOS A HACER LA PETICION MEDIANTE UN LLAMADO A LA FUNCION DEL MODELO.
             if (sizeof($response->errores) == 0) {
-                if ($this->agenda_model->updateHoraAgenda("hora_agenda", "id_hora_agenda", array('fecha_baja' => $fecha, "estado" => 0), $request->id)) {
+                if ($this->hora_agenda_model->updateHoraAgenda("hora_agenda", "id_hora_agenda", array('fecha_baja' => $fecha, "estado" => 0), $request->id)) {
                     //SI EL PROCESO ES EXITOSO, DEVOLVERA UN VALOR DENTRO DEL ARRAY DE RESPUESTA IGUAL A 1
                     $response->proceso = 1;
                 }
