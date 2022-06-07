@@ -91,7 +91,7 @@ class Cliente extends CI_Controller
     }
     public function getCliente()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
             $request->id = null;

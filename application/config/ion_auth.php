@@ -122,8 +122,8 @@ $config['argon2_default_params']	= [
  | The library will fail for empty password or password size above 4096 bytes.
  | This is an arbitrary (long) value to protect against DOS attack.
  */
-$config['site_title']                 = "Example.com";       // Site Title, example.com
-$config['admin_email']                = "admin@example.com"; // Admin Email, admin@example.com
+$config['site_title']                 = "amsolutions.cl";       // Site Title, example.com
+$config['admin_email']                = "martinignacioriosc@gmail.com"; // Admin Email, admin@example.com
 $config['default_group']              = 'members';           // Default group, use name
 $config['admin_group']                = 'admin';             // Default administrators group, use name
 $config['identity']                   = 'email';             /* You can use any unique column in your table as identity column.
@@ -132,7 +132,7 @@ $config['identity']                   = 'email';             /* You can use any 
 															    		   update the UNIQUE constraint in your DB */
 $config['min_password_length']        = 8;                   // Minimum Required Length of Password (not enforced by lib - see note above)
 $config['email_activation']           = FALSE;               // Email Activation for registration
-$config['manual_activation']          = FALSE;               // Manual Activation for registration
+$config['manual_activation']          = TRUE;               // Manual Activation for registration
 $config['remember_users']             = TRUE;                // Allow users to be remembered and enable auto-login
 $config['user_expire']                = 86500;               // How long to remember the user (seconds). Set to zero for no expiration - see sess_expiration in CodeIgniter Session Config for session expiration
 $config['user_extend_on_login']       = FALSE;               // Extend the users cookies every time they auto-login
@@ -166,6 +166,8 @@ $config['session_hash'] = '6583d6c4f205998ecacc9f51b68a2a2e44ea0006';
  */
 $config['remember_cookie_name'] = 'remember_code';
 
+
+
 /*
  | -------------------------------------------------------------------------
  | Email options.
@@ -174,9 +176,14 @@ $config['remember_cookie_name'] = 'remember_code';
  | 	  'file' = Use the default CI config or use from a config file
  | 	  array  = Manually set your email config settings
  */
-$config['use_ci_email'] = FALSE; // Send Email using the builtin CI email class, if false it will return the code and the identity
+$config['use_ci_email'] = TRUE; // Send Email using the builtin CI email class, if false it will return the code and the identity
 $config['email_config'] = [
 	'mailtype' => 'html',
+    'protocol' => 'smtp',
+    'smtp_host' => 'mail.aminformatica.cl',
+    'smtp_user' => 'contacto@aminformatica.cl',
+    'smtp_pass' => 'Contacto212.365',
+    'smtp_port' => '587'
 ];
 
 /*

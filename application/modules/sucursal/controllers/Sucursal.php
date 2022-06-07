@@ -14,7 +14,7 @@ class Sucursal extends CI_Controller
 
     public function index()
     {
-        if (!$this->ion_auth->logged_in()) {
+        if (!true) {
             // redirect them to the login page
             redirect('auth/login', 'refresh');
         } else {
@@ -32,7 +32,7 @@ class Sucursal extends CI_Controller
 
     public function getSucursal()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
             $request->id = null;
@@ -74,7 +74,7 @@ class Sucursal extends CI_Controller
 
     public function getSucursalById()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -131,7 +131,7 @@ class Sucursal extends CI_Controller
 
     public function insertSucursal()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -162,15 +162,15 @@ class Sucursal extends CI_Controller
             }
 
             if (!empty($this->input->post('direccion'))) {
-                $request->fecha_entrada = trim($this->security->xss_clean($this->input->post('direccion', true)));
+                $request->direccion = trim($this->security->xss_clean($this->input->post('direccion', true)));
             }
 
             if (!empty($this->input->post('ciudad'))) {
-                $request->fecha_salida = trim($this->security->xss_clean($this->input->post('ciudad', true)));
+                $request->ciudad = trim($this->security->xss_clean($this->input->post('ciudad', true)));
             }
 
             if (!empty($this->input->post('pais'))) {
-                $request->id_usuario_tecnico = trim($this->security->xss_clean($this->input->post('pais', true)));
+                $request->pais = trim($this->security->xss_clean($this->input->post('pais', true)));
             }
 
             //ALMACENAMOS LOS DATOS QUE VIENEN DEL POST, QUE REEMPLAZARAN A LA FILA ACTUAL EN LA BASE DE DATOS.
@@ -200,7 +200,7 @@ class Sucursal extends CI_Controller
     }
     public function updateSucursal()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -234,15 +234,15 @@ class Sucursal extends CI_Controller
                 }
     
                 if (!empty($this->input->post('direccion'))) {
-                    $request->fecha_entrada = trim($this->security->xss_clean($this->input->post('direccion', true)));
+                    $request->direccion = trim($this->security->xss_clean($this->input->post('direccion', true)));
                 }
     
                 if (!empty($this->input->post('ciudad'))) {
-                    $request->fecha_salida = trim($this->security->xss_clean($this->input->post('ciudad', true)));
+                    $request->ciudad = trim($this->security->xss_clean($this->input->post('ciudad', true)));
                 }
     
                 if (!empty($this->input->post('pais'))) {
-                    $request->id_usuario_tecnico = trim($this->security->xss_clean($this->input->post('pais', true)));
+                    $request->pais = trim($this->security->xss_clean($this->input->post('pais', true)));
                 }
 
 
@@ -280,7 +280,7 @@ class Sucursal extends CI_Controller
     }
     public function deleteSucursal()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();

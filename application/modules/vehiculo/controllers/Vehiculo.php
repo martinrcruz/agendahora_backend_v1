@@ -1,5 +1,6 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
+header('Access-Control-Allow-Headers: Content-Type');
 
 class Vehiculo extends CI_Controller
 {
@@ -14,7 +15,7 @@ class Vehiculo extends CI_Controller
 
     public function index()
     {
-        if (!$this->ion_auth->logged_in()) {
+        if (!true) {
             // redirect them to the login page
             redirect('auth/login', 'refresh');
         } else {
@@ -32,13 +33,13 @@ class Vehiculo extends CI_Controller
 
     public function getVehiculo()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
             $request->id = null;
             $request->data = [];
 
-			$fecha = date('Y-m-d H:i:s');
+            $fecha = date('Y-m-d H:i:s');
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [RESPUESTA]
             $response = new stdClass();
@@ -76,14 +77,14 @@ class Vehiculo extends CI_Controller
 
     public function getVehiculoById()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
             $request->id = null;
             $request->data = [];
 
-			$fecha = date('Y-m-d H:i:s');
+            $fecha = date('Y-m-d H:i:s');
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [RESPUESTA]
             $response = new stdClass();
@@ -135,7 +136,7 @@ class Vehiculo extends CI_Controller
 
     public function insertVehiculo()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -159,30 +160,34 @@ class Vehiculo extends CI_Controller
             //VERIFICAMOS LAS VARIABLES QUE RECIBIMOS PARA EDITAR.
 
             if (!empty($this->input->post('nombre'))) {
-                $request->nombre = trim($this->security->xss_clean($this->input->post('nombre', true)));
+                $request->nombre = $this->security->xss_clean($this->input->post('nombre'));
             }
 
             if (!empty($this->input->post('marca'))) {
-                $request->descripcion = trim($this->security->xss_clean($this->input->post('marca', true)));
+                $request->marca = $this->security->xss_clean($this->input->post('marca'));
+            }
+
+            if (!empty($this->input->post('modelo'))) {
+                $request->modelo = $this->security->xss_clean($this->input->post('modelo'));
             }
 
             if (!empty($this->input->post('version'))) {
-                $request->fecha_entrada = trim($this->security->xss_clean($this->input->post('version', true)));
+                $request->version = $this->security->xss_clean($this->input->post('version'));
             }
 
             if (!empty($this->input->post('patente'))) {
-                $request->fecha_salida = trim($this->security->xss_clean($this->input->post('patente', true)));
+                $request->patente = $this->security->xss_clean($this->input->post('patente'));
             }
 
             if (!empty($this->input->post('id_cliente'))) {
-                $request->id_usuario_tecnico = trim($this->security->xss_clean($this->input->post('id_cliente', true)));
+                $request->id_cliente = $this->security->xss_clean($this->input->post('id_cliente'));
             } else {
                 $response->errores[] = "Ocurrió un problema al obtener el id_cliente";
             }
 
             if (!empty($this->input->post('color'))) {
-                $request->id_cliente = trim($this->security->xss_clean($this->input->post('color', true)));
-            } 
+                $request->color = $this->security->xss_clean($this->input->post('color'));
+            }
 
 
             //ALMACENAMOS LOS DATOS QUE VIENEN DEL POST, QUE REEMPLAZARAN A LA FILA ACTUAL EN LA BASE DE DATOS.
@@ -208,14 +213,14 @@ class Vehiculo extends CI_Controller
                 $response->errores[] = "El dato no pudo ser ingresado";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }
     }
     public function updateVehiculo()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -242,30 +247,34 @@ class Vehiculo extends CI_Controller
                 //VERIFICAMOS LAS VARIABLES QUE RECIBIMOS PARA EDITAR.
 
                 if (!empty($this->input->post('nombre'))) {
-                    $request->nombre = trim($this->security->xss_clean($this->input->post('nombre', true)));
+                    $request->nombre = $this->security->xss_clean($this->input->post('nombre'));
                 }
-    
+
                 if (!empty($this->input->post('marca'))) {
-                    $request->descripcion = trim($this->security->xss_clean($this->input->post('marca', true)));
+                    $request->marca = $this->security->xss_clean($this->input->post('marca'));
                 }
-    
+
+                if (!empty($this->input->post('modelo'))) {
+                    $request->modelo = $this->security->xss_clean($this->input->post('modelo'));
+                }
+
                 if (!empty($this->input->post('version'))) {
-                    $request->fecha_entrada = trim($this->security->xss_clean($this->input->post('version', true)));
+                    $request->version = $this->security->xss_clean($this->input->post('version'));
                 }
-    
+
                 if (!empty($this->input->post('patente'))) {
-                    $request->fecha_salida = trim($this->security->xss_clean($this->input->post('patente', true)));
+                    $request->patente = $this->security->xss_clean($this->input->post('patente'));
                 }
-    
+
                 if (!empty($this->input->post('id_cliente'))) {
-                    $request->id_usuario_tecnico = trim($this->security->xss_clean($this->input->post('id_cliente', true)));
+                    $request->id_cliente = $this->security->xss_clean($this->input->post('id_cliente'));
                 } else {
                     $response->errores[] = "Ocurrió un problema al obtener el id_cliente";
                 }
-    
+
                 if (!empty($this->input->post('color'))) {
-                    $request->id_cliente = trim($this->security->xss_clean($this->input->post('color', true)));
-                } 
+                    $request->color = $this->security->xss_clean($this->input->post('color'));
+                }
 
 
 
@@ -296,7 +305,7 @@ class Vehiculo extends CI_Controller
                 $response->errores[] = "Ocurrió un problema al procesar la edicion";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }
@@ -304,7 +313,7 @@ class Vehiculo extends CI_Controller
 
     public function deleteVehiculo()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -318,6 +327,8 @@ class Vehiculo extends CI_Controller
             $response->proceso = 0;
             $response->errores = [];
 
+            $where = '';
+
 
             //COMPROBAMOS SI VIENE UN ID MEDIANTE LA PETICION POST, Y SI ES QUE VIENE LO GUARDAMOS.
             if (is_numeric($this->input->post('id_vehiculo'))) {
@@ -325,6 +336,11 @@ class Vehiculo extends CI_Controller
             } else { //SI NO, ALMACENAMOS EL ERROR EN UN ARRAY PARA DEVOLVERLO COMO RESPUESTA.
                 $response->errores[] = "Ocurrió un problema al obtener la solicitud";
             }
+
+            $where = " AND id_vehiculo=$request->id";
+            $itemEliminado = $this->vehiculo_model->getVehiculo($where);
+
+            $response->data = $itemEliminado->result();
 
             //SI ES QUE NO HAY ERRORES, PROCEDEMOS A HACER LA PETICION MEDIANTE UN LLAMADO A LA FUNCION DEL MODELO.
             if (sizeof($response->errores) == 0) {
@@ -336,7 +352,7 @@ class Vehiculo extends CI_Controller
                 $response->errores[] = "Ocurrió un problema al procesar la eliminacion";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }

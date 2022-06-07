@@ -8,7 +8,6 @@ class Agenda extends CI_Controller
         parent::__construct();
         $this->load->model('agenda_model');
         $this->load->library(['ion_auth', 'form_validation']);
-
         date_default_timezone_set('America/Santiago');
     }
 
@@ -30,9 +29,17 @@ class Agenda extends CI_Controller
     }
 
 
+
     public function getHoraAgenda()
     {
-        // if ($this->ion_auth->logged_in()) {
+
+        //CHEQUEAMOS PERMISOS DE USUARIO (SESION)
+        // if ($this->ion_auth->check_permission()) {
+        //     echo 'true';
+        // } else {
+        //     echo 'false';
+        // }
+
 
         if (true) {
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
@@ -40,7 +47,7 @@ class Agenda extends CI_Controller
             $request->id = null;
             $request->data = [];
 
-			$fecha = date('Y-m-d H:i:s');
+            $fecha = date('Y-m-d H:i:s');
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [RESPUESTA]
             $response = new stdClass();
@@ -48,6 +55,12 @@ class Agenda extends CI_Controller
             $response->data = [];
             $response->proceso = 0;
             $response->errores = [];
+            $response->userData = [];
+
+
+
+
+
 
             if ($query = $this->agenda_model->getHoraAgenda()) {
                 foreach ($query->result() as $res) {
@@ -85,7 +98,7 @@ class Agenda extends CI_Controller
             $request->id = null;
             $request->data = [];
 
-			$fecha = date('Y-m-d H:i:s');
+            $fecha = date('Y-m-d H:i:s');
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [RESPUESTA]
             $response = new stdClass();

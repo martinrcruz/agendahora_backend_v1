@@ -95,7 +95,7 @@ class Solicitud_vehiculo extends CI_Controller
     }
     public function getSolicitudVehiculo()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
             $request->id = null;
