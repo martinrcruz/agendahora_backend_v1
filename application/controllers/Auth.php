@@ -24,6 +24,13 @@ class Auth extends CI_Controller
 	/**
 	 * Redirect if needed, otherwise display the user list
 	 */
+
+	public function is_logged_in()
+	{
+		($this->ion_auth->is_logged_in()) ? $response = true : $response = false;
+		echo json_encode($response);
+	}
+
 	public function index()
 	{
 
@@ -54,6 +61,15 @@ class Auth extends CI_Controller
 		}
 	}
 
+
+
+	public function get_user_data()
+	{
+		echo json_encode($this->ion_auth->user()->row());
+	}
+
+
+
 	/**
 	 * Log the user in
 	 */
@@ -65,17 +81,28 @@ class Auth extends CI_Controller
 		$this->form_validation->set_rules('identity', str_replace(':', '', $this->lang->line('login_identity_label')), 'required');
 		$this->form_validation->set_rules('password', str_replace(':', '', $this->lang->line('login_password_label')), 'required');
 
+		// if ($this->form_validation->run() === TRUE) {
 		if ($this->form_validation->run() === TRUE) {
-
 			// check to see if the user is logging in
 			// check for "remember me"
-			$remember = (bool)$this->input->post('remember');
+
+			// $remember = (bool)$this->input->post('remember');
+			$remember = true;
 
 			if ($this->ion_auth->login($this->input->post('identity'), $this->input->post('password'), $remember)) {
+
+				$response = new stdClass();
+				$response->authorization = true;
+				$this->session->set_flashdata('message', $this->ion_auth->messages());
+				// redirect('/', 'refresh');
+
+				echo json_encode($response);
+
+
 				//if the login is successful
 				//redirect them back to the home page
-				$this->session->set_flashdata('message', $this->ion_auth->messages());
-				redirect('/', 'refresh');
+				// echo json_encode($this->session->set_flashdata('message', $this->ion_auth->messages()));
+				// redirect('/', 'refresh');
 			} else {
 				// if the login was un-successful
 				// redirect them back to the login page
@@ -109,13 +136,9 @@ class Auth extends CI_Controller
 	 */
 	public function logout()
 	{
-		$this->data['title'] = "Logout";
-
 		// log the user out
-		$this->ion_auth->logout();
-
+		return $this->ion_auth->logout();
 		// redirect them to the login page
-		redirect('auth/login', 'refresh');
 	}
 
 	/**

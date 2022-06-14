@@ -14,7 +14,7 @@ class Solicitud_vehiculo extends CI_Controller
 
     public function index()
     {
-        if (!$this->ion_auth->logged_in()) {
+        if (true) {
             // redirect them to the login page
             redirect('auth/login', 'refresh');
         } else {
@@ -30,7 +30,7 @@ class Solicitud_vehiculo extends CI_Controller
     }
     public function getSolicitudVehiculoById()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -145,7 +145,7 @@ class Solicitud_vehiculo extends CI_Controller
 
     public function insertSolicitudVehiculo()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -186,9 +186,7 @@ class Solicitud_vehiculo extends CI_Controller
             }
             if (!empty($this->input->post('ano_compra'))) {
                 $request->ano_compra = trim($this->security->xss_clean($this->input->post('ano_compra', true)));
-            } else {
-                $response->errores[] = "Ocurrió un problema al obtener el id_usuario_tecnico";
-            }
+            } 
             if (!empty($this->input->post('sucursal_compra'))) {
                 $request->sucursal_compra = trim($this->security->xss_clean($this->input->post('sucursal_compra', true)));
             } 
@@ -246,14 +244,14 @@ class Solicitud_vehiculo extends CI_Controller
                 $response->errores[] = "El dato no pudo ser ingresado";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }
     }
     public function updateSolicitudVehiculo()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -343,7 +341,9 @@ class Solicitud_vehiculo extends CI_Controller
 
                 );
             }
-
+            $where = " AND id_solicitud_vehiculo=$request->id";
+            $itemActualizado = $this->solicitud_vehiculo_model->getSolicitudVehiculo($where);
+            $response->data = $itemActualizado->result();
 
             //SI ES QUE NO HAY ERRORES, PROCEDEMOS A HACER LA PETICION MEDIANTE UN LLAMADO A LA FUNCION DEL MODELO.
             if (sizeof($response->errores) == 0) {
@@ -357,14 +357,14 @@ class Solicitud_vehiculo extends CI_Controller
                 $response->errores[] = "Ocurrió un problema al procesar la edicion";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }
     }
     public function deleteSolicitudVehiculo()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -385,6 +385,9 @@ class Solicitud_vehiculo extends CI_Controller
             } else { //SI NO, ALMACENAMOS EL ERROR EN UN ARRAY PARA DEVOLVERLO COMO RESPUESTA.
                 $response->errores[] = "Ocurrió un problema al obtener la solicitud";
             }
+            $where = " AND id_solicitud_vehiculo=$request->id";
+            $itemEliminado = $this->solicitud_vehiculo_model->getSolicitudVehiculo($where);
+            $response->data = $itemEliminado->result();
 
             //SI ES QUE NO HAY ERRORES, PROCEDEMOS A HACER LA PETICION MEDIANTE UN LLAMADO A LA FUNCION DEL MODELO.
             if (sizeof($response->errores) == 0) {
@@ -396,7 +399,7 @@ class Solicitud_vehiculo extends CI_Controller
                 $response->errores[] = "Ocurrió un problema al procesar la eliminacion";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }

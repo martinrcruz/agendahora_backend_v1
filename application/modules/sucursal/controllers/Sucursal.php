@@ -14,7 +14,7 @@ class Sucursal extends CI_Controller
 
     public function index()
     {
-        if (!true) {
+        if (true) {
             // redirect them to the login page
             redirect('auth/login', 'refresh');
         } else {
@@ -99,7 +99,7 @@ class Sucursal extends CI_Controller
                 $response->errores[] = "Ocurrió un problema al obtener la solicitud";
             }
 
-            $request->id ? $where = " AND id_sucursala=$request->id" : $where = '';
+            $request->id ? $where = " AND id_sucursal=$request->id" : $where = '';
 
 
             if (sizeof($response->errores) == 0) {
@@ -193,7 +193,7 @@ class Sucursal extends CI_Controller
                 $response->errores[] = "El dato no pudo ser ingresado";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }
@@ -259,7 +259,9 @@ class Sucursal extends CI_Controller
 
                 );
             }
-
+            $where = " AND id_sucursal=$request->id";
+            $itemActualizado = $this->sucursal_model->getSucursal($where);
+            $response->data = $itemActualizado->result();
 
             //SI ES QUE NO HAY ERRORES, PROCEDEMOS A HACER LA PETICION MEDIANTE UN LLAMADO A LA FUNCION DEL MODELO.
             if (sizeof($response->errores) == 0) {
@@ -273,7 +275,7 @@ class Sucursal extends CI_Controller
                 $response->errores[] = "Ocurrió un problema al procesar la edicion";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }
@@ -301,6 +303,9 @@ class Sucursal extends CI_Controller
             } else { //SI NO, ALMACENAMOS EL ERROR EN UN ARRAY PARA DEVOLVERLO COMO RESPUESTA.
                 $response->errores[] = "Ocurrió un problema al obtener la solicitud";
             }
+            $where = " AND id_sucursal=$request->id";
+            $itemEliminado = $this->sucursal_model->getSucursal($where);
+            $response->data = $itemEliminado->result();
 
             //SI ES QUE NO HAY ERRORES, PROCEDEMOS A HACER LA PETICION MEDIANTE UN LLAMADO A LA FUNCION DEL MODELO.
             if (sizeof($response->errores) == 0) {
@@ -312,7 +317,7 @@ class Sucursal extends CI_Controller
                 $response->errores[] = "Ocurrió un problema al procesar la eliminacion";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }

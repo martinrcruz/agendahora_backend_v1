@@ -14,7 +14,7 @@ class Marca extends CI_Controller
 
     public function index()
     {
-        if (!$this->ion_auth->logged_in()) {
+        if (true) {
             // redirect them to the login page
             redirect('auth/login', 'refresh');
         } else {
@@ -31,7 +31,7 @@ class Marca extends CI_Controller
 
     public function getMarcaById()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -84,7 +84,7 @@ class Marca extends CI_Controller
     }
     public function getMarca()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
             $request->id = null;
@@ -122,7 +122,7 @@ class Marca extends CI_Controller
 
     public function insertMarca()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -169,14 +169,14 @@ class Marca extends CI_Controller
                 $response->errores[] = "El dato no pudo ser ingresado";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }
     }
     public function updateMarca()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -216,6 +216,9 @@ class Marca extends CI_Controller
                     'fecha_modificacion' => $fecha,
                 );
             }
+            $where = " AND id_marca=$request->id";
+            $itemActualizado = $this->marca_model->getMarca($where);
+            $response->data = $itemActualizado->result();
             //SI ES QUE NO HAY ERRORES, PROCEDEMOS A HACER LA PETICION MEDIANTE UN LLAMADO A LA FUNCION DEL MODELO.
             if (sizeof($response->errores) == 0) {
                 if ($query = $this->marca_model->updateMarca('marca', 'id_marca', $datos, $request->id)) {
@@ -228,14 +231,14 @@ class Marca extends CI_Controller
                 $response->errores[] = "Ocurrió un problema al procesar la edicion";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }
     }
     public function deleteMarca()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -256,7 +259,9 @@ class Marca extends CI_Controller
             } else { //SI NO, ALMACENAMOS EL ERROR EN UN ARRAY PARA DEVOLVERLO COMO RESPUESTA.
                 $response->errores[] = "Ocurrió un problema al obtener la solicitud";
             }
-
+            $where = " AND id_marca=$request->id";
+            $itemEliminado = $this->marca_model->getMarca($where);
+            $response->data = $itemEliminado->result();
             //SI ES QUE NO HAY ERRORES, PROCEDEMOS A HACER LA PETICION MEDIANTE UN LLAMADO A LA FUNCION DEL MODELO.
             if (sizeof($response->errores) == 0) {
                 if ($this->marca_model->updateMarca("marca", "id_marca", array('fecha_baja' => $fecha, "estado" => 0), $request->id)) {
@@ -267,7 +272,7 @@ class Marca extends CI_Controller
                 $response->errores[] = "Ocurrió un problema al procesar la eliminacion";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }

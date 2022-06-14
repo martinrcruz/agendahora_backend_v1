@@ -14,7 +14,7 @@ class Historial_servicio extends CI_Controller
 
     public function index()
     {
-        if (!$this->ion_auth->logged_in()) {
+        if (!true) {
             // redirect them to the login page
             redirect('auth/login', 'refresh');
         } else {
@@ -73,7 +73,7 @@ class Historial_servicio extends CI_Controller
     }
     public function getHistorialServicioById()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -133,7 +133,7 @@ class Historial_servicio extends CI_Controller
 
     public function insertHistorialServicio()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -172,7 +172,7 @@ class Historial_servicio extends CI_Controller
             }
 
             if (!empty($this->input->post('id_usuario_cargo'))) {
-                $request->id_usuario_cargo = trim($this->security->xss_clean($this->input->post('id_usuario_tecnico', true)));
+                $request->id_usuario_cargo = trim($this->security->xss_clean($this->input->post('id_usuario_cargo', true)));
             } else {
                 $response->errores[] = "Ocurrió un problema al obtener el id_usuario_cargo";
             }
@@ -184,7 +184,7 @@ class Historial_servicio extends CI_Controller
             }
 
             if (!empty($this->input->post('id_usuario_tecnico'))) {
-                $request->id_vehiculo = trim($this->security->xss_clean($this->input->post('id_usuario_tecnico', true)));
+                $request->id_usuario_tecnico = trim($this->security->xss_clean($this->input->post('id_usuario_tecnico', true)));
             } else {
                 $response->errores[] = "Ocurrió un problema al obtener el id_usuario_tecnico";
             }
@@ -214,14 +214,14 @@ class Historial_servicio extends CI_Controller
                 $response->errores[] = "El dato no pudo ser ingresado";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }
     }
     public function updateHistorialServicio()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -263,7 +263,7 @@ class Historial_servicio extends CI_Controller
                 }
     
                 if (!empty($this->input->post('id_usuario_cargo'))) {
-                    $request->id_usuario_cargo = trim($this->security->xss_clean($this->input->post('id_usuario_tecnico', true)));
+                    $request->id_usuario_cargo = trim($this->security->xss_clean($this->input->post('id_usuario_cargo', true)));
                 } 
     
                 if (!empty($this->input->post('id_cliente'))) {
@@ -271,7 +271,7 @@ class Historial_servicio extends CI_Controller
                 } 
     
                 if (!empty($this->input->post('id_usuario_tecnico'))) {
-                    $request->id_vehiculo = trim($this->security->xss_clean($this->input->post('id_usuario_tecnico', true)));
+                    $request->id_usuario_tecnico = trim($this->security->xss_clean($this->input->post('id_usuario_tecnico', true)));
                 } 
 
 
@@ -293,7 +293,10 @@ class Historial_servicio extends CI_Controller
                 );
             }
 
+            $where = " AND id_historial_servicio=$request->id";
+            $itemActualizado = $this->historial_servicio_model->getHistorialServicio($where);
 
+            $response->data = $itemActualizado->result();
             //SI ES QUE NO HAY ERRORES, PROCEDEMOS A HACER LA PETICION MEDIANTE UN LLAMADO A LA FUNCION DEL MODELO.
             if (sizeof($response->errores) == 0) {
                 if ($query = $this->historial_servicio_model->updateHistorialServicio('historial_servicio', 'id_historial_servicio', $datos, $request->id)) {
@@ -306,14 +309,14 @@ class Historial_servicio extends CI_Controller
                 $response->errores[] = "Ocurrió un problema al procesar la edicion";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }
     }
     public function deleteHistorialServicio()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -334,7 +337,10 @@ class Historial_servicio extends CI_Controller
             } else { //SI NO, ALMACENAMOS EL ERROR EN UN ARRAY PARA DEVOLVERLO COMO RESPUESTA.
                 $response->errores[] = "Ocurrió un problema al obtener la solicitud";
             }
+            $where = " AND id_historial_servicio=$request->id";
+            $itemEliminado = $this->historial_servicio_model->getHistorialServicio($where);
 
+            $response->data = $itemEliminado->result();
             //SI ES QUE NO HAY ERRORES, PROCEDEMOS A HACER LA PETICION MEDIANTE UN LLAMADO A LA FUNCION DEL MODELO.
             if (sizeof($response->errores) == 0) {
                 if ($this->historial_servicio_model->updateHistorialServicio("historial_servicio", "id_historial_servicio", array('fecha_baja' => $fecha, "estado" => 0), $request->id)) {
@@ -345,7 +351,7 @@ class Historial_servicio extends CI_Controller
                 $response->errores[] = "Ocurrió un problema al procesar la eliminacion";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }

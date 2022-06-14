@@ -273,10 +273,10 @@ class Ion_auth_model extends CI_Model
 		$query = $this->db->query($sql);
 
 
-        if ($query->num_rows() > 0)
-            return $query;
-        else
-            return false;
+		if ($query->num_rows() > 0)
+			return $query;
+		else
+			return false;
 	}
 
 	/**
@@ -913,6 +913,7 @@ class Ion_auth_model extends CI_Model
 
 				$this->set_session($user);
 
+
 				$this->update_last_login($user->id);
 
 				$this->clear_login_attempts($identity);
@@ -934,6 +935,9 @@ class Ion_auth_model extends CI_Model
 
 				$this->trigger_events(['post_login', 'post_login_successful']);
 				$this->set_message('login_successful');
+
+		
+
 
 				return TRUE;
 			}
@@ -1821,6 +1825,7 @@ class Ion_auth_model extends CI_Model
 			'value'  => $lang,
 			'expire' => $expire
 		]);
+		
 
 		return TRUE;
 	}
@@ -1848,6 +1853,7 @@ class Ion_auth_model extends CI_Model
 		];
 
 		$this->session->set_userdata($session_data);
+		// var_dump($session_data);
 
 		$this->trigger_events('post_set_session');
 

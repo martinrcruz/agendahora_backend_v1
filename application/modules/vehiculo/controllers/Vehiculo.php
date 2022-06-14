@@ -15,7 +15,7 @@ class Vehiculo extends CI_Controller
 
     public function index()
     {
-        if (!true) {
+        if (true) {
             // redirect them to the login page
             redirect('auth/login', 'refresh');
         } else {
@@ -165,6 +165,8 @@ class Vehiculo extends CI_Controller
 
             if (!empty($this->input->post('marca'))) {
                 $request->marca = $this->security->xss_clean($this->input->post('marca'));
+            }else {
+                $response->errores[] = "Ocurrió un problema al obtener la marca";
             }
 
             if (!empty($this->input->post('modelo'))) {
@@ -291,6 +293,10 @@ class Vehiculo extends CI_Controller
 
                 );
             }
+            $where = " AND id_vehiculo=$request->id";
+            $itemActualizado = $this->vehiculo_model->getVehiculo($where);
+
+            $response->data = $itemActualizado->result();
 
 
             //SI ES QUE NO HAY ERRORES, PROCEDEMOS A HACER LA PETICION MEDIANTE UN LLAMADO A LA FUNCION DEL MODELO.

@@ -339,6 +339,24 @@ class Ion_auth
 		return $recheck;
 	}
 
+	public function is_logged_in()
+	{
+		$this->session->userdata();
+		$this->ion_auth_model->trigger_events('logged_in');
+
+		$recheck = $this->ion_auth_model->recheck_session();
+
+		// auto-login the user if they are remembered
+		if (!$recheck && get_cookie($this->config->item('remember_cookie_name', 'ion_auth'))) {
+			$recheck = $this->ion_auth_model->login_remembered_user();
+		}
+		if($recheck === FALSE){
+			return false;
+		}else{
+			return true;
+		}
+	}
+
 	/**
 	 * @return int|null The user's ID from the session user data or NULL if not found
 	 * @author jrmadsen67

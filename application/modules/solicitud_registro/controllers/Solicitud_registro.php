@@ -14,7 +14,7 @@ class Solicitud_registro extends CI_Controller
 
     public function index()
     {
-        if (!$this->ion_auth->logged_in()) {
+        if (true) {
             // redirect them to the login page
             redirect('auth/login', 'refresh');
         } else {
@@ -30,7 +30,7 @@ class Solicitud_registro extends CI_Controller
     }
     public function getSolicitudRegistroById()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -139,7 +139,7 @@ class Solicitud_registro extends CI_Controller
 
     public function insertSolicitudRegistro()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -224,14 +224,14 @@ class Solicitud_registro extends CI_Controller
                 $response->errores[] = "El dato no pudo ser ingresado";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }
     }
     public function updateSolicitudRegistro()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -309,7 +309,9 @@ class Solicitud_registro extends CI_Controller
                 );
             }
 
-
+            $where = " AND id_solicitud_registro=$request->id";
+            $itemActualizado = $this->solicitud_registro_model->getSolicitudRegistro($where);
+            $response->data = $itemActualizado->result();
             //SI ES QUE NO HAY ERRORES, PROCEDEMOS A HACER LA PETICION MEDIANTE UN LLAMADO A LA FUNCION DEL MODELO.
             if (sizeof($response->errores) == 0) {
                 if ($query = $this->solicitud_registro_model->updateSolicitudRegistro('solicitud_registro', 'id_solicitud_registro', $datos, $request->id)) {
@@ -322,14 +324,14 @@ class Solicitud_registro extends CI_Controller
                 $response->errores[] = "Ocurrió un problema al procesar la edicion";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }
     }
     public function deleteSolicitudRegistro()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -350,7 +352,9 @@ class Solicitud_registro extends CI_Controller
             } else { //SI NO, ALMACENAMOS EL ERROR EN UN ARRAY PARA DEVOLVERLO COMO RESPUESTA.
                 $response->errores[] = "Ocurrió un problema al obtener la solicitud";
             }
-
+            $where = " AND id_solicitud_registro=$request->id";
+            $itemEliminado = $this->solicitud_registro_model->getSolicitudRegistro($where);
+            $response->data = $itemEliminado->result();
             //SI ES QUE NO HAY ERRORES, PROCEDEMOS A HACER LA PETICION MEDIANTE UN LLAMADO A LA FUNCION DEL MODELO.
             if (sizeof($response->errores) == 0) {
                 if ($this->solicitud_registro_model->updateSolicitudRegistro("solicitud_registro", "id_solicitud_registro", array('fecha_baja' => $fecha, "estado" => 0), $request->id)) {
@@ -361,7 +365,7 @@ class Solicitud_registro extends CI_Controller
                 $response->errores[] = "Ocurrió un problema al procesar la eliminacion";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }

@@ -14,7 +14,7 @@ class Mensaje extends CI_Controller
 
     public function index()
     {
-        if (!$this->ion_auth->logged_in()) {
+        if (true) {
             // redirect them to the login page
             redirect('auth/login', 'refresh');
         } else {
@@ -32,7 +32,7 @@ class Mensaje extends CI_Controller
 
     public function getMensaje()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
             $request->id = null;
@@ -73,7 +73,7 @@ class Mensaje extends CI_Controller
 
     public function getMensajeById()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -129,7 +129,7 @@ class Mensaje extends CI_Controller
 
     public function insertMensaje()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -151,21 +151,24 @@ class Mensaje extends CI_Controller
         PARA QUE NO HAGA LA INSERCION, DEBIDO A QUE EN LA BASE DE DATOS, ESTOS CAMPOS SON NOT NULL **/
 
             //VERIFICAMOS LAS VARIABLES QUE RECIBIMOS PARA EDITAR.
-
-            if (!empty($this->input->post('>usuario_emisor '))) {
-                $request->nombre = trim($this->security->xss_clean($this->input->post('usuario_emisor ', true)));
+            if (!empty($this->input->post('usuario_emisor'))) {
+                $request->usuario_emisor = trim($this->security->xss_clean($this->input->post('usuario_emisor', true)));
+            }else {
+                $response->errores[] = "Ocurrió un problema al obtener el usuario_emisor";
             }
 
-            if (!empty($this->input->post('usuario_receptor '))) {
-                $request->descripcion = trim($this->security->xss_clean($this->input->post('usuario_receptor ', true)));
+            if (!empty($this->input->post('usuario_receptor'))) {
+                $request->usuario_receptor = trim($this->security->xss_clean($this->input->post('usuario_receptor', true)));
+            }else {
+                $response->errores[] = "Ocurrió un problema al obtener el usuario_receptor";
             }
 
-            if (!empty($this->input->post('mensaje '))) {
-                $request->fecha_entrada = trim($this->security->xss_clean($this->input->post('mensaje ', true)));
+            if (!empty($this->input->post('mensaje'))) {
+                $request->mensaje = trim($this->security->xss_clean($this->input->post('mensaje', true)));
             }
 
-            if (!empty($this->input->post('fecha_lectura '))) {
-                $request->fecha_salida = trim($this->security->xss_clean($this->input->post('fecha_lectura ', true)));
+            if (!empty($this->input->post('fecha_lectura'))) {
+                $request->fecha_lectura = trim($this->security->xss_clean($this->input->post('fecha_lectura', true)));
             }
 
 
@@ -189,14 +192,14 @@ class Mensaje extends CI_Controller
                 $response->errores[] = "El dato no pudo ser ingresado";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }
     }
     public function updateMensaje()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -221,20 +224,20 @@ class Mensaje extends CI_Controller
 
             if (sizeof($response->errores) == 0) {
                 //VERIFICAMOS LAS VARIABLES QUE RECIBIMOS PARA EDITAR.
-                if (!empty($this->input->post('>usuario_emisor '))) {
-                    $request->nombre = trim($this->security->xss_clean($this->input->post('usuario_emisor ', true)));
+                if (!empty($this->input->post('usuario_emisor'))) {
+                    $request->usuario_emisor = trim($this->security->xss_clean($this->input->post('usuario_emisor', true)));
                 }
     
-                if (!empty($this->input->post('usuario_receptor '))) {
-                    $request->descripcion = trim($this->security->xss_clean($this->input->post('usuario_receptor ', true)));
+                if (!empty($this->input->post('usuario_receptor'))) {
+                    $request->usuario_receptor = trim($this->security->xss_clean($this->input->post('usuario_receptor', true)));
                 }
     
-                if (!empty($this->input->post('mensaje '))) {
-                    $request->fecha_entrada = trim($this->security->xss_clean($this->input->post('mensaje ', true)));
+                if (!empty($this->input->post('mensaje'))) {
+                    $request->mensaje = trim($this->security->xss_clean($this->input->post('mensaje', true)));
                 }
     
-                if (!empty($this->input->post('fecha_lectura '))) {
-                    $request->fecha_salida = trim($this->security->xss_clean($this->input->post('fecha_lectura ', true)));
+                if (!empty($this->input->post('fecha_lectura'))) {
+                    $request->fecha_lectura = trim($this->security->xss_clean($this->input->post('fecha_lectura', true)));
                 }
 
 
@@ -250,7 +253,9 @@ class Mensaje extends CI_Controller
                 );
             }
 
-
+            $where = " AND id_mensaje=$request->id";
+            $itemActualizado = $this->mensaje_model->getMensaje($where);
+            $response->data = $itemActualizado->result();
             //SI ES QUE NO HAY ERRORES, PROCEDEMOS A HACER LA PETICION MEDIANTE UN LLAMADO A LA FUNCION DEL MODELO.
             if (sizeof($response->errores) == 0) {
                 if ($query = $this->mensaje_model->updateMensaje('mensaje', 'id_mensaje', $datos, $request->id)) {
@@ -263,14 +268,14 @@ class Mensaje extends CI_Controller
                 $response->errores[] = "Ocurrió un problema al procesar la edicion";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }
     }
     public function deleteMensaje()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -291,7 +296,9 @@ class Mensaje extends CI_Controller
             } else { //SI NO, ALMACENAMOS EL ERROR EN UN ARRAY PARA DEVOLVERLO COMO RESPUESTA.
                 $response->errores[] = "Ocurrió un problema al obtener la solicitud";
             }
-
+            $where = " AND id_mensaje=$request->id";
+            $itemEliminado = $this->mensaje_model->getMensaje($where);
+            $response->data = $itemEliminado->result();
             //SI ES QUE NO HAY ERRORES, PROCEDEMOS A HACER LA PETICION MEDIANTE UN LLAMADO A LA FUNCION DEL MODELO.
             if (sizeof($response->errores) == 0) {
                 if ($this->mensaje_model->updateMensaje("mensaje", "id_mensaje", array('fecha_baja' => $fecha, "estado" => 0), $request->id)) {
@@ -302,7 +309,7 @@ class Mensaje extends CI_Controller
                 $response->errores[] = "Ocurrió un problema al procesar la eliminacion";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }

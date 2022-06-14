@@ -14,7 +14,7 @@ class Hora_agenda extends CI_Controller
 
     public function index()
     {
-        if (!$this->ion_auth->logged_in()) {
+        if (true) {
             // redirect them to the login page
             redirect('auth/login', 'refresh');
         } else {
@@ -30,7 +30,7 @@ class Hora_agenda extends CI_Controller
     }
     public function getHoraAgendaById()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -73,6 +73,10 @@ class Hora_agenda extends CI_Controller
                         $row->id_cliente = $res->id_cliente;
                         $row->id_vehiculo = $res->id_vehiculo;
                         $row->id_usuario_cargo = $res->id_usuario_cargo;
+                        $row->fecha_creacion = $res->fecha_creacion;
+                        $row->fecha_modificacion = $res->fecha_modificacion;
+                        $row->fecha_baja = $res->fecha_baja;
+                        $row->estado = $res->estado;
 
                         array_push($response->data, $row);
                     }
@@ -86,7 +90,7 @@ class Hora_agenda extends CI_Controller
     }
     public function getHoraAgenda()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
             $request->id = null;
@@ -116,6 +120,9 @@ class Hora_agenda extends CI_Controller
                     $row->id_vehiculo = $res->id_vehiculo;
                     $row->id_usuario_cargo = $res->id_usuario_cargo;
                     $row->fecha_creacion = $res->fecha_creacion;
+                    $row->fecha_modificacion = $res->fecha_modificacion;
+                    $row->fecha_baja = $res->fecha_baja;
+                    $row->estado = $res->estado;
 
                     array_push($response->data, $row);
                 }
@@ -128,7 +135,7 @@ class Hora_agenda extends CI_Controller
 
     public function insertHoraAgenda()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -221,14 +228,14 @@ class Hora_agenda extends CI_Controller
                 $response->errores[] = "El dato no pudo ser ingresado";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }
     }
     public function updateHoraAgenda()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -299,6 +306,9 @@ class Hora_agenda extends CI_Controller
                 );
             }
 
+            $where = " AND id_hora_agenda=$request->id";
+            $itemActualizado = $this->hora_agenda_model->getHoraAgenda($where);
+            $response->data = $itemActualizado->result();
 
             //SI ES QUE NO HAY ERRORES, PROCEDEMOS A HACER LA PETICION MEDIANTE UN LLAMADO A LA FUNCION DEL MODELO.
             if (sizeof($response->errores) == 0) {
@@ -312,14 +322,14 @@ class Hora_agenda extends CI_Controller
                 $response->errores[] = "Ocurrió un problema al procesar la edicion";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }
     }
     public function deleteHoraAgenda()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -340,7 +350,9 @@ class Hora_agenda extends CI_Controller
             } else { //SI NO, ALMACENAMOS EL ERROR EN UN ARRAY PARA DEVOLVERLO COMO RESPUESTA.
                 $response->errores[] = "Ocurrió un problema al obtener la solicitud";
             }
-
+            $where = " AND id_hora_agenda=$request->id";
+            $itemEliminado = $this->hora_agenda_model->getHoraAgenda($where);
+            $response->data = $itemEliminado->result();
             //SI ES QUE NO HAY ERRORES, PROCEDEMOS A HACER LA PETICION MEDIANTE UN LLAMADO A LA FUNCION DEL MODELO.
             if (sizeof($response->errores) == 0) {
                 if ($this->hora_agenda_model->updateHoraAgenda("hora_agenda", "id_hora_agenda", array('fecha_baja' => $fecha, "estado" => 0), $request->id)) {
@@ -351,7 +363,7 @@ class Hora_agenda extends CI_Controller
                 $response->errores[] = "Ocurrió un problema al procesar la eliminacion";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }

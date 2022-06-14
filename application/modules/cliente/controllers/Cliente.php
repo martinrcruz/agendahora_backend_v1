@@ -14,7 +14,7 @@ class Cliente extends CI_Controller
 
     public function index()
     {
-        if (!$this->ion_auth->logged_in()) {
+        if (true) {
             // redirect them to the login page
             redirect('auth/login', 'refresh');
         } else {
@@ -30,7 +30,7 @@ class Cliente extends CI_Controller
     }
     public function getClienteById()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -137,7 +137,7 @@ class Cliente extends CI_Controller
 
     public function insertCliente()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -183,7 +183,9 @@ class Cliente extends CI_Controller
             } 
             if (!empty($this->input->post('sucursal'))) {
                 $request->sucursal = trim($this->security->xss_clean($this->input->post('sucursal', true)));
-            } 
+            } else {
+                $response->errores[] = "Ocurrió un problema al obtener el la sucursal";
+            }
             if (!empty($this->input->post('nombre_usuario'))) {
                 $request->nombre_usuario = trim($this->security->xss_clean($this->input->post('nombre_usuario', true)));
             } 
@@ -214,14 +216,14 @@ class Cliente extends CI_Controller
                 $response->errores[] = "El dato no pudo ser ingresado";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }
     }
     public function updateCliente()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -270,7 +272,9 @@ class Cliente extends CI_Controller
                 } 
                 if (!empty($this->input->post('sucursal'))) {
                     $request->sucursal = trim($this->security->xss_clean($this->input->post('sucursal', true)));
-                } 
+                }else {
+                $response->errores[] = "Ocurrió un problema al obtener el id_vehiculo";
+            } 
                 if (!empty($this->input->post('nombre_usuario'))) {
                     $request->nombre_usuario = trim($this->security->xss_clean($this->input->post('nombre_usuario', true)));
                 } 
@@ -293,7 +297,9 @@ class Cliente extends CI_Controller
                     'fecha_modificacion' => $fecha,
                 );
             }
-
+            $where = " AND id_cliente=$request->id";
+            $itemActualizado = $this->cliente_model->getCliente($where);
+            $response->data = $itemActualizado->result();
 
             //SI ES QUE NO HAY ERRORES, PROCEDEMOS A HACER LA PETICION MEDIANTE UN LLAMADO A LA FUNCION DEL MODELO.
             if (sizeof($response->errores) == 0) {
@@ -307,7 +313,7 @@ class Cliente extends CI_Controller
                 $response->errores[] = "Ocurrió un problema al procesar la edicion";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }
@@ -315,7 +321,7 @@ class Cliente extends CI_Controller
     }
     public function deleteCliente()
     {
-        if ($this->ion_auth->logged_in()) {
+        if (true) {
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
@@ -336,6 +342,9 @@ class Cliente extends CI_Controller
             } else { //SI NO, ALMACENAMOS EL ERROR EN UN ARRAY PARA DEVOLVERLO COMO RESPUESTA.
                 $response->errores[] = "Ocurrió un problema al obtener la solicitud";
             }
+            $where = " AND id_cliente=$request->id";
+            $itemEliminado = $this->cliente_model->getCliente($where);
+            $response->data = $itemEliminado->result();
             //SI ES QUE NO HAY ERRORES, PROCEDEMOS A HACER LA PETICION MEDIANTE UN LLAMADO A LA FUNCION DEL MODELO.
             if (sizeof($response->errores) == 0) {
                 if ($this->cliente_model->updateCliente("cliente", "id_cliente", array('fecha_baja' => $fecha, "estado" => 0), $request->id)) {
@@ -346,7 +355,7 @@ class Cliente extends CI_Controller
                 $response->errores[] = "Ocurrió un problema al procesar la eliminacion";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }
