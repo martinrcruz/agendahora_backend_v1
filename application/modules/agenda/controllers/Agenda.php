@@ -58,10 +58,6 @@ class Agenda extends CI_Controller
             $response->userData = [];
 
 
-
-
-
-
             if ($query = $this->agenda_model->getHoraAgenda()) {
                 foreach ($query->result() as $res) {
                     $row = null;
@@ -86,7 +82,6 @@ class Agenda extends CI_Controller
             redirect('auth/login', 'refresh');
         }
     }
-
 
 
     public function getHoraAgendaById()
@@ -148,6 +143,127 @@ class Agenda extends CI_Controller
 
 
 
+
+
+    public function getHoraAgendaTabla()
+    {
+
+        //CHEQUEAMOS PERMISOS DE USUARIO (SESION)
+        // if ($this->ion_auth->check_permission()) {
+        //     echo 'true';
+        // } else {
+        //     echo 'false';
+        // }
+
+
+        if (true) {
+            //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
+            $request = new stdClass();
+            $request->id = null;
+            $request->data = [];
+
+            $fecha = date('Y-m-d H:i:s');
+
+            //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [RESPUESTA]
+            $response = new stdClass();
+            $response->id = null;
+            $response->data = [];
+            $response->proceso = 0;
+            $response->errores = [];
+            $response->userData = [];
+
+
+            if ($query = $this->agenda_model->getHoraAgendaTabla()) {
+                foreach ($query->result() as $res) {
+                    $row = null;
+                    $row = new stdClass();
+                    $row->id_hora_agenda = $res->id_hora_agenda;
+                    $row->nombre = $res->nombre;
+                    $row->descripcion = $res->descripcion;
+                    $row->fecha_agenda = $res->fecha_agenda;
+                    $row->hora_agenda = $res->hora_agenda;
+                    $row->id_tecnico = $res->id_tecnico;
+                    $row->id_cliente = $res->id_cliente;
+                    $row->id_vehiculo = $res->id_vehiculo;
+                    $row->marca = $res->marca;
+                    $row->modelo = $res->modelo;
+                    $row->version = $res->version;
+                    // $row->id_usuario_cargo = $res->id_usuario_cargo;
+                    $row->fecha_creacion = $res->fecha_creacion;
+
+                    array_push($response->data, $row);
+                }
+            }
+            echo json_encode($response);
+        } else {
+            redirect('auth/login', 'refresh');
+        }
+    }
+
+
+    public function getHoraAgendaTablaById()
+    {
+        if (true) {
+
+            //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
+            $request = new stdClass();
+            $request->id = null;
+            $request->data = [];
+
+            $fecha = date('Y-m-d H:i:s');
+
+            //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [RESPUESTA]
+            $response = new stdClass();
+            $response->data = [];
+            $response->proceso = 0;
+            $response->errores = [];
+
+
+            //DECLARACION DE VARIABLES DE FILTRO PARA QUERY
+            $where = '';
+
+            if (is_numeric($this->input->post('id_hora_agenda'))) {
+                $request->id = trim($this->security->xss_clean($this->input->post('id_hora_agenda', true)));
+            } else { //SI NO, ALMACENAMOS EL ERROR EN UN ARRAY PARA DEVOLVERLO COMO RESPUESTA.
+                $response->errores[] = "Ocurrió un problema al obtener la solicitud";
+            }
+
+            $request->id ? $where = " AND id_hora_agenda=$request->id" : $where = '';
+
+
+            if (sizeof($response->errores) == 0) {
+                if ($query = $this->agenda_model->getHoraAgendaTabla($where)) {
+                    foreach ($query->result() as $res) {
+                        $row = null;
+                        $row = new stdClass();
+                        $row->id_hora_agenda = $res->id_hora_agenda;
+                        $row->id_servicio = $res->id_servicio;
+                        $row->nombre = $res->nombre;
+                        $row->descripcion = $res->descripcion;
+                        $row->fecha_entrada = $res->fecha_entrada;
+                        $row->fecha_salida = $res->fecha_salida;
+                        $row->id_usuario_tecnico = $res->id_usuario_tecnico;
+                        $row->id_cliente = $res->id_cliente;
+                        $row->id_vehiculo = $res->id_vehiculo;
+                        $row->id_usuario_cargo = $res->id_usuario_cargo;
+
+                        array_push($response->data, $row);
+                    }
+                }
+            }
+
+            echo json_encode($response);
+        } else {
+            redirect('auth/login', 'refresh');
+        }
+    }
+
+
+
+
+
+
+
     public function insertHoraAgenda()
     {
         if (true) {
@@ -168,7 +284,7 @@ class Agenda extends CI_Controller
 
 
 
-            /**** CUANDO NO RECIBAMOS UN ID COMO FOREIGN KEY, DEBEMOS ASIGNARLE UN ERROR AL PROCESO, 
+            /**** CUANDO NO RECIBAMOS UN ID COMO FOREIGN KEY, DEBEMOS ASIGNARLE UN ERROR AL PROCESO,
         PARA QUE NO HAGA LA INSERCION, DEBIDO A QUE EN LA BASE DE DATOS, ESTOS CAMPOS SON NOT NULL ****/
 
             //VERIFICAMOS LAS VARIABLES QUE RECIBIMOS PARA EDITAR.

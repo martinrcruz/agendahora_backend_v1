@@ -261,7 +261,15 @@ class Ion_auth_model extends CI_Model
 	}
 
 
-
+    public function updateGroup($tabla, $comparar, $datos, $id)
+    {
+    	$this->db->where($comparar, $id);
+		$result = $this->db->update($tabla, $datos);
+		if ($result)
+			return true;
+		else
+			return false;
+    }
 
 	public function check_permission($user_id)
 	{

@@ -25,11 +25,8 @@ class Auth extends CI_Controller
 	 * Redirect if needed, otherwise display the user list
 	 */
 
-	public function is_logged_in()
-	{
-		($this->ion_auth->is_logged_in()) ? $response = true : $response = false;
-		echo json_encode($response);
-	}
+
+
 
 	public function index()
 	{
@@ -65,7 +62,27 @@ class Auth extends CI_Controller
 
 	public function get_user_data()
 	{
-		echo json_encode($this->ion_auth->user()->row());
+		$response = new stdClass();
+		$response->estado = '';
+		$response->data = [];
+		$response->error = [];
+		$res = new stdClass();
+
+		if($this->ion_auth->logged_in()){
+			$res->id_usuario = $this->ion_auth->user()->row()->id;
+			$res->username = $this->ion_auth->user()->row()->username;
+			$res->grupo = $this->ion_auth->get_users_groups()->row()->id;
+		
+			array_push($response->data, $res);
+
+			$response->estado= 1;
+		} else {
+			$response->estado = 0;
+			$response->error = 'Usuario no loggeado';
+		}
+		
+
+		echo json_encode($response);
 	}
 
 
@@ -425,11 +442,12 @@ class Auth extends CI_Controller
 	 */
 	public function create_user()
 	{
+
 		$this->data['title'] = $this->lang->line('create_user_heading');
 
-		if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
-			redirect('auth', 'refresh');
-		}
+		// if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
+		// 	redirect('auth', 'refresh');
+		// }
 
 		$tables = $this->config->item('tables', 'ion_auth');
 		$identity_column = $this->config->item('identity', 'ion_auth');
@@ -461,12 +479,17 @@ class Auth extends CI_Controller
 				'phone' => $this->input->post('phone'),
 			];
 		}
-		if ($this->form_validation->run() === TRUE && $this->ion_auth->register($identity, $password, $email, $additional_data)) {
+		if ($this->form_validation->run() === TRUE && $id = $this->ion_auth->register($identity, $password, $email, $additional_data)) {
+			$grupo = $this->input->post('grupo');
+
+			$this->editGroup($id, $grupo);
 			// check to see if we are creating the user
 			// redirect them back to the admin page
+
 			$this->session->set_flashdata('message', $this->ion_auth->messages());
 			redirect("auth", 'refresh');
 		} else {
+
 			// display the create user form
 			// set the flash data error message if there is one
 			$this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
@@ -661,6 +684,48 @@ class Auth extends CI_Controller
 		$this->_render_page('auth/edit_user', $this->data);
 	}
 
+
+	public function editGroup($id, $grupo)
+	{
+		//DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
+		$request = new stdClass();
+		$request->id = null;
+		$fecha = date('Y-m-d H:i:s');
+
+		//DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [RESPUESTA]
+		$response = new stdClass();
+		$response->id = null;
+		$response->data = [];
+		$response->proceso = 0;
+		$response->errores = [];
+
+		// //COMPROBAMOS SI VIENE UN ID MEDIANTE LA PETICION POST, Y SI ES QUE VIENE LO GUARDAMOS.
+		// if ($this->input->post('id')) {
+		//     $request->id = $this->security->xss_clean($this->input->post('id'));
+		// } else { //SI NO, ALMACENAMOS EL ERROR EN UN ARRAY PARA DEVOLVERLO COMO RESPUESTA.
+		//     $response->errores[] = "Ocurrió un problema al obtener la solicitud";
+		// }
+
+		// if ($this->input->post('grupo')) {
+		//     $request->grupo = $this->security->xss_clean($this->input->post('grupo'));
+		// } else { //SI NO, ALMACENAMOS EL ERROR EN UN ARRAY PARA DEVOLVERLO COMO RESPUESTA.
+		//     $response->errores[] = "Ocurrió un problema al obtener la solicitud";
+		// }
+
+
+		if (sizeof($response->errores) == 0) {
+			if ($this->ion_auth_model->updateGroup("users_groups", "user_id", array("group_id" => $grupo), $id)) {
+				//SI EL PROCESO ES EXITOSO, DEVOLVERA UN VALOR DENTRO DEL ARRAY DE RESPUESTA IGUAL A 1
+				$response->proceso = 1;
+			}
+		} else {
+			$response->errores[] = "Ocurrió un problema al procesar la eliminacion";
+		}
+		echo json_encode($response);
+	}
+
+
+
 	/**
 	 * Create a new group
 	 */
@@ -721,9 +786,9 @@ class Auth extends CI_Controller
 
 		$this->data['title'] = $this->lang->line('edit_group_title');
 
-		if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
-			redirect('auth', 'refresh');
-		}
+		// if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
+		// 	redirect('auth', 'refresh');
+		// }
 
 		$group = $this->ion_auth->group($id)->row();
 

@@ -23,7 +23,7 @@ class Hora_agenda_model extends CI_Model
     {
         $query = $this->db->insert($tabla, $data);
 		if ($query)
-			return $this->db->insert_id(); 
+			return $this->db->insert_id();
 		else
 			return false;
     }

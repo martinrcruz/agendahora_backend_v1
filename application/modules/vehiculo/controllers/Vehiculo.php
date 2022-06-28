@@ -75,6 +75,100 @@ class Vehiculo extends CI_Controller
     }
 
 
+    public function getVehiculoTabla()
+    {
+        if (true) {
+            //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
+            $request = new stdClass();
+            $request->id = null;
+            $request->data = [];
+
+            $fecha = date('Y-m-d H:i:s');
+            $where = '';
+
+            //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [RESPUESTA]
+            $response = new stdClass();
+            $response->id = null;
+            $response->data = [];
+            $response->proceso = 0;
+            $response->errores = [];
+
+            if (!empty($this->input->post('fecha_inicio'))) {
+                if ($this->input->post('fecha_inicio') != 'null') {
+                    $request->fecha_inicio = $this->security->xss_clean($this->input->post('fecha_inicio'));
+                    $where .= " AND v.fecha_creacion >= '$request->fecha_inicio'";
+                }
+            } else {
+                $response->errores[] = "Ocurrió un problema al obtener fecha_inicio";
+            }
+
+            if (!empty($this->input->post('fecha_fin'))) {
+                if ($this->input->post('fecha_fin') != 'null') {
+                    $request->fecha_fin = $this->security->xss_clean($this->input->post('fecha_fin'));
+                    $where .= " AND v.fecha_creacion <= '$request->fecha_fin'";
+                }
+            } else {
+                $response->errores[] = "Ocurrió un problema al obtener fecha_fin";
+            }
+
+            if (!empty($this->input->post('marca'))) {
+                if ($this->input->post('marca') != 'null') {
+                    $request->marca = $this->security->xss_clean($this->input->post('marca'));
+                    $where .= " AND v.marca = $request->marca";
+                }
+            } else {
+                $response->errores[] = "Ocurrió un problema al obtener marca";
+            }
+
+            if (!empty($this->input->post('modelo'))) {
+                if ($this->input->post('modelo') != 'null') {
+                    $request->modelo = $this->security->xss_clean($this->input->post('modelo'));
+                    $where .= " AND v.modelo = $request->modelo";
+                }
+            } else {
+                $response->errores[] = "Ocurrió un problema al obtener modelo";
+            }
+
+            if (!empty($this->input->post('version'))) {
+                if ($this->input->post('version') != 'null') {
+                    $request->version = $this->security->xss_clean($this->input->post('version'));
+                    $where .= " AND v.version = $request->version";
+                }
+            } else {
+                $response->errores[] = "Ocurrió un problema al obtener version";
+            }
+
+
+
+
+            if ($query = $this->vehiculo_model->getVehiculoTabla($where)) {
+                foreach ($query->result() as $res) {
+                    $row = null;
+                    $row = new stdClass();
+                    $row->id_vehiculo = $res->id_vehiculo;
+                    $row->nombre = $res->nombre;
+                    $row->marca = $res->marca;
+                    $row->modelo = $res->modelo;
+                    $row->patente = $res->patente;
+                    $row->id_cliente = $res->id_cliente;
+                    $row->nombre_cliente = $res->nombre_cliente;
+                    $row->color = $res->color;
+                    $row->fecha_creacion = $res->fecha_creacion;
+                    $row->fecha_modificacion = $res->fecha_modificacion;
+                    $row->fecha_baja = $res->fecha_baja;
+                    $row->estado = $res->estado;
+
+                    array_push($response->data, $row);
+                }
+            }
+            echo json_encode($response);
+        } else {
+            redirect('auth/login', 'refresh');
+        }
+    }
+
+
+
     public function getVehiculoById()
     {
         if (true) {
@@ -165,7 +259,7 @@ class Vehiculo extends CI_Controller
 
             if (!empty($this->input->post('marca'))) {
                 $request->marca = $this->security->xss_clean($this->input->post('marca'));
-            }else {
+            } else {
                 $response->errores[] = "Ocurrió un problema al obtener la marca";
             }
 
@@ -358,6 +452,57 @@ class Vehiculo extends CI_Controller
                 $response->errores[] = "Ocurrió un problema al procesar la eliminacion";
             }
 
+            echo json_encode($response);
+        } else {
+            redirect('auth/login', 'refresh');
+        }
+    }
+
+
+
+    /****************************************************************/
+    /****************************************************************/
+    /****************** MOBILE BACKEND API FUNCTIONS ****************/
+    /****************************************************************/
+    /****************************************************************/
+
+
+    public function getVehiculoMobile()
+    {
+        if (true) {
+            //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
+            $request = new stdClass();
+            $request->id = null;
+            $request->data = [];
+
+            $fecha = date('Y-m-d H:i:s');
+
+            //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [RESPUESTA]
+            $response = new stdClass();
+            $response->id = null;
+            $response->data = [];
+            $response->proceso = 0;
+            $response->errores = [];
+
+            if ($query = $this->vehiculo_model->getVehiculoMobile()) {
+                foreach ($query->result() as $res) {
+                    $row = null;
+                    $row = new stdClass();
+                    $row->id_vehiculo = $res->id_vehiculo;
+                    $row->nombre_vehiculo = $res->nombre_vehiculo;
+                    $row->nombre_marca = $res->nombre_marca;
+                    $row->nombre_modelo = $res->nombre_modelo;
+                    // $row->nombre_version = $res->nombre_version;
+                    $row->ultimo_servicio = date('d-m-Y', strtotime($res->ultimo_servicio));
+                    $row->detalle_ultimo_servicio = $res->detalle_ultimo_servicio;
+                    $row->patente = $res->patente;
+                    $row->color = $res->color;
+                    $row->fecha_creacion = $res->fecha_creacion;
+                    $row->estado = $res->estado;
+
+                    array_push($response->data, $row);
+                }
+            }
             echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');

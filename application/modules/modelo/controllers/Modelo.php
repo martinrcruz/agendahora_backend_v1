@@ -38,7 +38,7 @@ class Modelo extends CI_Controller
             $request->id = null;
             $request->data = [];
 
-			$fecha = date('Y-m-d H:i:s');
+            $fecha = date('Y-m-d H:i:s');
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [RESPUESTA]
             $response = new stdClass();
@@ -82,7 +82,7 @@ class Modelo extends CI_Controller
             redirect('auth/login', 'refresh');
         }
     }
-    public function getModelo()
+    public function getModelo($marca)
     {
         if (true) {
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
@@ -90,8 +90,8 @@ class Modelo extends CI_Controller
             $request->id = null;
             $request->data = [];
 
-			$fecha = date('Y-m-d H:i:s');
-
+            $fecha = date('Y-m-d H:i:s');
+            $where = '';
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [RESPUESTA]
             $response = new stdClass();
             $response->id = null;
@@ -99,7 +99,17 @@ class Modelo extends CI_Controller
             $response->proceso = 0;
             $response->errores = [];
 
-            if ($query = $this->modelo_model->getModelo()) {
+
+            if (is_numeric($this->input->post('marca'))) {
+                $request->id = trim($this->security->xss_clean($this->input->post('marca', true)));
+            } else { //SI NO, ALMACENAMOS EL ERROR EN UN ARRAY PARA DEVOLVERLO COMO RESPUESTA.
+                $response->errores[] = "Ocurrió un problema al obtener la solicitud";
+            }
+
+
+            $where = " AND id_marca=$marca";
+
+            if ($query = $this->modelo_model->getModelo($where)) {
                 foreach ($query->result() as $res) {
                     $row = null;
                     $row = new stdClass();
@@ -204,7 +214,7 @@ class Modelo extends CI_Controller
                 if (!empty($this->input->post('nombre'))) {
                     $request->nombre = trim($this->security->xss_clean($this->input->post('nombre', true)));
                 }
-    
+
                 if (!empty($this->input->post('logo'))) {
                     $request->logo = trim($this->security->xss_clean($this->input->post('logo', true)));
                 }
@@ -272,5 +282,4 @@ class Modelo extends CI_Controller
             redirect('auth/login', 'refresh');
         }
     }
-
 }

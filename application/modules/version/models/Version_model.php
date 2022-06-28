@@ -1,14 +1,14 @@
 <?php
 
-class Modelo_model extends CI_Model
+class Version_model extends CI_Model
 {
     public function __construct()
     {
         parent::__construct();
     }
-    public function getModelo($where)
+    public function getVersion($where='')
     {
-        $sql = "SELECT * FROM modelo WHERE ESTADO=1 $where;";
+        $sql = "SELECT * FROM version WHERE ESTADO=1 $where;";
         $query = $this->db->query($sql);
         //var_dump($this->db->last_query());
 
@@ -18,7 +18,7 @@ class Modelo_model extends CI_Model
             return false;
     }
 
-    public function insertModelo($tabla, $data)
+    public function insertVersion($tabla, $data)
     {
         $query = $this->db->insert($tabla, $data);
 		if ($query)
@@ -26,7 +26,7 @@ class Modelo_model extends CI_Model
 		else
 			return false;
     }
-    public function updateModelo($tabla, $comparar, $datos, $id)
+    public function updateVersion($tabla, $comparar, $datos, $id)
     {
     	$this->db->where($comparar, $id);
 		$result = $this->db->update($tabla, $datos);
