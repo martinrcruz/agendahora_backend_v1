@@ -72,7 +72,10 @@ class Auth extends CI_Controller
 			$res->id_usuario = $this->ion_auth->user()->row()->id;
 			$res->username = $this->ion_auth->user()->row()->username;
 			$res->grupo = $this->ion_auth->get_users_groups()->row()->id;
-		
+			$res->correo = $this->ion_auth->user()->row()->email;
+			$res->nombre = $this->ion_auth->user()->row()->first_name;
+			$res->apellido = $this->ion_auth->user()->row()->last_name;
+
 			array_push($response->data, $res);
 
 			$response->estado= 1;
@@ -80,11 +83,28 @@ class Auth extends CI_Controller
 			$response->estado = 0;
 			$response->error = 'Usuario no loggeado';
 		}
-		
+
 
 		echo json_encode($response);
 	}
 
+	public function is_logged_in()
+	{
+		$this->session->userdata();
+		$this->ion_auth_model->trigger_events('logged_in');
+
+		$recheck = $this->ion_auth_model->recheck_session();
+
+		// auto-login the user if they are remembered
+		if (!$recheck && get_cookie($this->config->item('remember_cookie_name', 'ion_auth'))) {
+			$recheck = $this->ion_auth_model->login_remembered_user();
+		}
+		if($recheck === FALSE){
+			return false;
+		}else{
+			return true;
+		}
+	}
 
 
 	/**
@@ -92,20 +112,14 @@ class Auth extends CI_Controller
 	 */
 	public function login()
 	{
-		$this->data['title'] = $this->lang->line('login_heading');
-
-		// validate form input
-		$this->form_validation->set_rules('identity', str_replace(':', '', $this->lang->line('login_identity_label')), 'required');
-		$this->form_validation->set_rules('password', str_replace(':', '', $this->lang->line('login_password_label')), 'required');
 
 		// if ($this->form_validation->run() === TRUE) {
-		if ($this->form_validation->run() === TRUE) {
+		if (TRUE) {
 			// check to see if the user is logging in
 			// check for "remember me"
 
 			// $remember = (bool)$this->input->post('remember');
 			$remember = true;
-
 			if ($this->ion_auth->login($this->input->post('identity'), $this->input->post('password'), $remember)) {
 
 				$response = new stdClass();

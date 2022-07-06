@@ -58,14 +58,16 @@ class Agenda extends CI_Controller
             $response->userData = [];
 
 
-            if ($query = $this->agenda_model->getHoraAgenda()) {
+            if ($query = $this->agenda_model->getHoraAgendaTabla()) {
                 foreach ($query->result() as $res) {
                     $row = null;
                     $row = new stdClass();
                     $row->id_hora_agenda = $res->id_hora_agenda;
                     $row->id_servicio = $res->id_servicio;
                     $row->nombre = $res->nombre;
-                    $row->descripcion = $res->descripcion;
+                    $row->observacion = $res->observacion;
+                    $row->agenda_inicio = $res->agenda_inicio;
+                    $row->agenda_fin = $res->agenda_fin;
                     $row->fecha_entrada = $res->fecha_entrada;
                     $row->fecha_salida = $res->fecha_salida;
                     $row->id_usuario_tecnico = $res->id_usuario_tecnico;
@@ -122,7 +124,7 @@ class Agenda extends CI_Controller
                         $row->id_hora_agenda = $res->id_hora_agenda;
                         $row->id_servicio = $res->id_servicio;
                         $row->nombre = $res->nombre;
-                        $row->descripcion = $res->descripcion;
+                        $row->observacion = $res->observacion;
                         $row->fecha_entrada = $res->fecha_entrada;
                         $row->fecha_salida = $res->fecha_salida;
                         $row->id_usuario_tecnico = $res->id_usuario_tecnico;
@@ -178,10 +180,12 @@ class Agenda extends CI_Controller
                     $row = null;
                     $row = new stdClass();
                     $row->id_hora_agenda = $res->id_hora_agenda;
+                    $row->id_servicio = $res->id_servicio;
                     $row->nombre = $res->nombre;
-                    $row->descripcion = $res->descripcion;
+                    $row->observacion = $res->observacion;
                     $row->fecha_agenda = $res->fecha_agenda;
-                    $row->hora_agenda = $res->hora_agenda;
+                    $row->agenda_inicio = $res->agenda_inicio;
+                    $row->agenda_fin = $res->agenda_fin;
                     $row->id_tecnico = $res->id_tecnico;
                     $row->id_cliente = $res->id_cliente;
                     $row->id_vehiculo = $res->id_vehiculo;
@@ -239,7 +243,7 @@ class Agenda extends CI_Controller
                         $row->id_hora_agenda = $res->id_hora_agenda;
                         $row->id_servicio = $res->id_servicio;
                         $row->nombre = $res->nombre;
-                        $row->descripcion = $res->descripcion;
+                        $row->observacion = $res->observacion;
                         $row->fecha_entrada = $res->fecha_entrada;
                         $row->fecha_salida = $res->fecha_salida;
                         $row->id_usuario_tecnico = $res->id_usuario_tecnico;
@@ -298,8 +302,8 @@ class Agenda extends CI_Controller
                 $request->nombre = trim($this->security->xss_clean($this->input->post('nombre', true)));
             }
 
-            if (!empty($this->input->post('descripcion'))) {
-                $request->descripcion = trim($this->security->xss_clean($this->input->post('descripcion', true)));
+            if (!empty($this->input->post('observacion'))) {
+                $request->observacion = trim($this->security->xss_clean($this->input->post('observacion', true)));
             }
 
             if (!empty($this->input->post('fecha_entrada'))) {
@@ -338,7 +342,7 @@ class Agenda extends CI_Controller
             $datos = array(
                 'id_servicio' => $request->id_servicio,
                 'nombre' => $request->nombre,
-                'descripcion' => $request->descripcion,
+                'observacion' => $request->observacion,
                 'fecha_entrada' => $request->fecha_entrada,
                 'fecha_salida' => $request->fecha_salida,
                 'id_usuario_tecnico' => $request->id_usuario_tecnico,
@@ -400,8 +404,8 @@ class Agenda extends CI_Controller
                 if (!empty($this->input->post('nombre'))) {
                     $request->nombre = trim($this->security->xss_clean($this->input->post('nombre', true)));
                 }
-                if (!empty($this->input->post('descripcion'))) {
-                    $request->descripcion = trim($this->security->xss_clean($this->input->post('descripcion', true)));
+                if (!empty($this->input->post('observacion'))) {
+                    $request->observacion = trim($this->security->xss_clean($this->input->post('observacion', true)));
                 }
                 if (!empty($this->input->post('fecha_entrada'))) {
                     $request->fecha_entrada = trim($this->security->xss_clean($this->input->post('fecha_entrada', true)));
@@ -428,7 +432,7 @@ class Agenda extends CI_Controller
                 $datos = array(
                     'id_servicio' => $request->id_servicio,
                     'nombre' => $request->nombre,
-                    'descripcion' => $request->descripcion,
+                    'observacion' => $request->observacion,
                     'fecha_entrada' => $request->fecha_entrada,
                     'fecha_salida' => $request->fecha_salida,
                     'id_usuario_tecnico' => $request->id_usuario_tecnico,

@@ -20,7 +20,7 @@ class Servicio extends CI_Controller
             $request = new stdClass();
             $request->id = null;
             $request->data = [];
-
+            $where = '';
             $fecha = date('Y-m-d H:i:s');
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [RESPUESTA]
@@ -30,7 +30,12 @@ class Servicio extends CI_Controller
             $response->proceso = 0;
             $response->errores = [];
 
-            if ($query = $this->servicio_model->getServicio()) {
+            if ($this->input->post('user_id')) {
+              $user_id = $this->security->xss_clean($this->input->post('user_id'));
+              $where = " AND u.id=" . $user_id;
+            }
+
+            if ($query = $this->servicio_model->getServicio($where)) {
                 foreach ($query->result() as $res) {
                     $row = null;
                     $row = new stdClass();
@@ -53,6 +58,52 @@ class Servicio extends CI_Controller
             redirect('auth/login', 'refresh');
         }
     }
+
+    public function getServiciosActivos()
+    {
+        if (true) {
+            //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
+            $request = new stdClass();
+            $request->id = null;
+            $request->data = [];
+            $where = '';
+            $fecha = date('Y-m-d H:i:s');
+
+            //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [RESPUESTA]
+            $response = new stdClass();
+            $response->id = null;
+            $response->data = [];
+            $response->proceso = 0;
+            $response->errores = [];
+
+            if ($this->input->post('user_id')) {
+              $user_id = $this->security->xss_clean($this->input->post('user_id'));
+              $where = " AND u.id=" . $user_id;
+            }
+            if ($query = $this->servicio_model->getServicio($where)) {
+                foreach ($query->result() as $res) {
+                    $row = null;
+                    $row = new stdClass();
+
+                    $row->id_servicio = $res->id_servicio;
+                    $row->nombre = $res->nombre;
+                    $row->descripcion = $res->descripcion;
+                    $row->id_vehiculo = $res->id_vehiculo;
+                    $row->id_tecnico = $res->id_tecnico;
+                    $row->fecha_creacion = $res->fecha_creacion;
+                    $row->fecha_modificacion = $res->fecha_modificacion;
+                    $row->fecha_baja = $res->fecha_baja;
+                    $row->estado = $res->estado;
+
+                    array_push($response->data, $row);
+                }
+            }
+            echo json_encode($response);
+        } else {
+            redirect('auth/login', 'refresh');
+        }
+    }
+
 
     public function getServicioTabla()
     {

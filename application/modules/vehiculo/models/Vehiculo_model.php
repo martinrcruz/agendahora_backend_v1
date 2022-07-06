@@ -20,7 +20,7 @@ class Vehiculo_model extends CI_Model
 
     public function getVehiculoTabla($where = '')
     {
-        $sql = "SELECT 
+        $sql = "SELECT
         v.id_vehiculo as id_vehiculo,
         v.nombre as nombre,
         ma.nombre as marca,
@@ -48,7 +48,7 @@ class Vehiculo_model extends CI_Model
             return false;
     }
 
-    public function getVehiculoMobile($where = '')
+    public function getVehiculoMobile($where)
     {
         $sql = "SELECT
         v.id_vehiculo as id_vehiculo,
@@ -66,7 +66,8 @@ class Vehiculo_model extends CI_Model
        JOIN marca ma ON ma.id_marca=v.marca
        JOIN modelo mo ON mo.id_modelo=v.modelo
        JOIN servicio s ON s.id_vehiculo=v.id_vehiculo
-       WHERE v.ESTADO=1 $where;";
+       JOIN users u ON u.id=v.id_cliente
+       WHERE v.ESTADO=1 $where ORDER BY v.id_vehiculo desc;";
         $query = $this->db->query($sql);
         //var_dump($this->db->last_query());
 

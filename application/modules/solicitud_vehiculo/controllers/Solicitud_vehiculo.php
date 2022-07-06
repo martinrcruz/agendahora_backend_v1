@@ -28,7 +28,7 @@ class Solicitud_vehiculo extends CI_Controller
             $this->load->view('estructura/body', $data);
         }
     }
-    public function getSolicitudVehiculoById()
+    public function getSolicitudVehiculoById($id)
     {
         if (true) {
 
@@ -49,13 +49,9 @@ class Solicitud_vehiculo extends CI_Controller
             //DECLARACION DE VARIABLES DE FILTRO PARA QUERY
             $where = '';
 
-            if (is_numeric($this->input->post('id_solicitud_vehiculo'))) {
-                $request->id = trim($this->security->xss_clean($this->input->post('id_solicitud_vehiculo', true)));
-            } else { //SI NO, ALMACENAMOS EL ERROR EN UN ARRAY PARA DEVOLVERLO COMO RESPUESTA.
-                $response->errores[] = "Ocurrió un problema al obtener la solicitud";
-            }
+              $id ? $where = " AND sv.id_solicitud_vehiculo=$id" : $where = '';
 
-            $request->id ? $where = " AND id_solicitud_vehiculo=$request->id" : $where = '';
+
 
 
             if (sizeof($response->errores) == 0) {
@@ -64,13 +60,13 @@ class Solicitud_vehiculo extends CI_Controller
                         $row = null;
                         $row = new stdClass();
                         $row->id_solicitud_vehiculo = $res->id_solicitud_vehiculo;
-                        $row->id_marca = $res->id_marca;
+                        $row->marca = $res->marca;
                         $row->modelo = $res->modelo;
                         $row->ano = $res->ano;
                         $row->patente = $res->patente;
                         $row->version = $res->version;
                         $row->ano_compra = $res->ano_compra;
-                        $row->sucursal_compra = $res->sucursal_compra;
+                        $row->sucursal = $res->sucursal;
                         $row->nro_chasis = $res->nro_chasis;
                         $row->nro_motor = $res->nro_motor;
                         $row->img_1 = $res->img_1;
@@ -101,7 +97,7 @@ class Solicitud_vehiculo extends CI_Controller
             $request->id = null;
             $request->data = [];
 
-			$fecha = date('Y-m-d H:i:s');
+			      $fecha = date('Y-m-d H:i:s');
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [RESPUESTA]
             $response = new stdClass();
@@ -110,18 +106,27 @@ class Solicitud_vehiculo extends CI_Controller
             $response->proceso = 0;
             $response->errores = [];
 
-            if ($query = $this->solicitud_vehiculo_model->getSolicitudVehiculo()) {
+            if ($this->input->post('user_id')) {
+                $request->user_id = trim($this->security->xss_clean($this->input->post('user_id', true)));
+            } else { //SI NO, ALMACENAMOS EL ERROR EN UN ARRAY PARA DEVOLVERLO COMO RESPUESTA.
+                $response->errores[] = "Ocurrió un problema al obtener el id de usuario";
+            }
+
+            $request->user_id ? $where = " AND id_cliente=$request->user_id" : $where = '';
+
+
+            if ($query = $this->solicitud_vehiculo_model->getSolicitudVehiculo($where)) {
                 foreach ($query->result() as $res) {
                     $row = null;
                     $row = new stdClass();
                     $row->id_solicitud_vehiculo = $res->id_solicitud_vehiculo;
-                    $row->id_marca = $res->id_marca;
+                    $row->marca = $res->marca;
                     $row->modelo = $res->modelo;
                     $row->ano = $res->ano;
                     $row->patente = $res->patente;
                     $row->version = $res->version;
                     $row->ano_compra = $res->ano_compra;
-                    $row->sucursal_compra = $res->sucursal_compra;
+                    $row->sucursal = $res->sucursal;
                     $row->nro_chasis = $res->nro_chasis;
                     $row->nro_motor = $res->nro_motor;
                     $row->img_1 = $res->img_1;
@@ -163,14 +168,12 @@ class Solicitud_vehiculo extends CI_Controller
 
 
 
-            /** CUANDO NO RECIBAMOS UN ID COMO FOREIGN KEY, DEBEMOS ASIGNARLE UN ERROR AL PROCESO, 
+            /** CUANDO NO RECIBAMOS UN ID COMO FOREIGN KEY, DEBEMOS ASIGNARLE UN ERROR AL PROCESO,
         PARA QUE NO HAGA LA INSERCION, DEBIDO A QUE EN LA BASE DE DATOS, ESTOS CAMPOS SON NOT NULL **/
 
             //VERIFICAMOS LAS VARIABLES QUE RECIBIMOS PARA EDITAR.
-            if (!empty($this->input->post('id_marca'))) {
-                $request->id_marca = trim($this->security->xss_clean($this->input->post('id_marca', true)));
-            } else {
-                $response->errores[] = "Ocurrió un problema al obtener el id_marca";
+            if (!empty($this->input->post('marca'))) {
+                $request->marca = trim($this->security->xss_clean($this->input->post('marca', true)));
             }
             if (!empty($this->input->post('modelo'))) {
                 $request->modelo = trim($this->security->xss_clean($this->input->post('modelo', true)));
@@ -186,30 +189,26 @@ class Solicitud_vehiculo extends CI_Controller
             }
             if (!empty($this->input->post('ano_compra'))) {
                 $request->ano_compra = trim($this->security->xss_clean($this->input->post('ano_compra', true)));
-            } 
-            if (!empty($this->input->post('sucursal_compra'))) {
-                $request->sucursal_compra = trim($this->security->xss_clean($this->input->post('sucursal_compra', true)));
-            } 
+            }
+            if (!empty($this->input->post('sucursal'))) {
+                $request->sucursal = trim($this->security->xss_clean($this->input->post('sucursal', true)));
+            }
             if (!empty($this->input->post('nro_chasis'))) {
                 $request->nro_chasis = trim($this->security->xss_clean($this->input->post('nro_chasis', true)));
-            } 
+            }
             if (!empty($this->input->post('nro_motor'))) {
                 $request->nro_motor = trim($this->security->xss_clean($this->input->post('nro_motor', true)));
-            } 
+            }
             if (!empty($this->input->post('img_1'))) {
                 $request->img_1 = trim($this->security->xss_clean($this->input->post('img_1', true)));
-            } 
+            }
             if (!empty($this->input->post('img_2'))) {
                 $request->img_2 = trim($this->security->xss_clean($this->input->post('img_2', true)));
-            } 
+            }
             if (!empty($this->input->post('img_3'))) {
                 $request->img_3 = trim($this->security->xss_clean($this->input->post('img_3', true)));
-            } 
-            if (!empty($this->input->post('id_usuario_gestor'))) {
-                $request->id_usuario_gestor = trim($this->security->xss_clean($this->input->post('id_usuario_gestor', true)));
-            } else {
-                $response->errores[] = "Ocurrió un problema al obtener el id_usuario_gestor";
             }
+
             if (!empty($this->input->post('id_cliente'))) {
                 $request->id_cliente = trim($this->security->xss_clean($this->input->post('id_cliente', true)));
             } else {
@@ -217,19 +216,14 @@ class Solicitud_vehiculo extends CI_Controller
             }
             //ALMACENAMOS LOS DATOS QUE VIENEN DEL POST, QUE REEMPLAZARAN A LA FILA ACTUAL EN LA BASE DE DATOS.
             $datos = array(
-                'id_marca' => $request->id_marca,
+                'marca' => $request->marca,
                 'modelo' => $request->modelo,
-                'ano' => $request->ano,
                 'patente' => $request->patente,
                 'version' => $request->version,
                 'ano_compra' => $request->ano_compra,
-                'sucursal_compra' => $request->sucursal_compra,
+                'sucursal' => $request->sucursal,
                 'nro_chasis' => $request->nro_chasis,
                 'nro_motor' => $request->nro_motor,
-                'img_1' => $request->img_1,
-                'img_2' => $request->img_2,
-                'img_3' => $request->img_3,
-                'id_usuario_gestor' => $request->id_usuario_gestor,
                 'id_cliente' => $request->id_cliente,
                 'fecha_creacion' => $fecha,
                 'estado' => 1
@@ -276,9 +270,9 @@ class Solicitud_vehiculo extends CI_Controller
 
             if (sizeof($response->errores) == 0) {
                 //VERIFICAMOS LAS VARIABLES QUE RECIBIMOS PARA EDITAR.
-                if (!empty($this->input->post('id_marca'))) {
-                    $request->id_marca = trim($this->security->xss_clean($this->input->post('id_marca', true)));
-                } 
+                if (!empty($this->input->post('marca'))) {
+                    $request->marca = trim($this->security->xss_clean($this->input->post('marca', true)));
+                }
                 if (!empty($this->input->post('modelo'))) {
                     $request->modelo = trim($this->security->xss_clean($this->input->post('modelo', true)));
                 }
@@ -293,43 +287,43 @@ class Solicitud_vehiculo extends CI_Controller
                 }
                 if (!empty($this->input->post('ano_compra'))) {
                     $request->ano_compra = trim($this->security->xss_clean($this->input->post('ano_compra', true)));
-                } 
-                if (!empty($this->input->post('sucursal_compra'))) {
-                    $request->sucursal_compra = trim($this->security->xss_clean($this->input->post('sucursal_compra', true)));
-                } 
+                }
+                if (!empty($this->input->post('sucursal'))) {
+                    $request->sucursal = trim($this->security->xss_clean($this->input->post('sucursal', true)));
+                }
                 if (!empty($this->input->post('nro_chasis'))) {
                     $request->nro_chasis = trim($this->security->xss_clean($this->input->post('nro_chasis', true)));
-                } 
+                }
                 if (!empty($this->input->post('nro_motor'))) {
                     $request->nro_motor = trim($this->security->xss_clean($this->input->post('nro_motor', true)));
-                } 
+                }
                 if (!empty($this->input->post('img_1'))) {
                     $request->img_1 = trim($this->security->xss_clean($this->input->post('img_1', true)));
-                } 
+                }
                 if (!empty($this->input->post('img_2'))) {
                     $request->img_2 = trim($this->security->xss_clean($this->input->post('img_2', true)));
-                } 
+                }
                 if (!empty($this->input->post('img_3'))) {
                     $request->img_3 = trim($this->security->xss_clean($this->input->post('img_3', true)));
-                } 
+                }
                 if (!empty($this->input->post('id_usuario_gestor'))) {
                     $request->id_usuario_gestor = trim($this->security->xss_clean($this->input->post('id_usuario_gestor', true)));
                 }
                 if (!empty($this->input->post('id_cliente'))) {
                     $request->id_cliente = trim($this->security->xss_clean($this->input->post('id_cliente', true)));
-                } 
+                }
 
 
 
                 //ALMACENAMOS LOS DATOS QUE VIENEN DEL POST, QUE REEMPLAZARAN A LA FILA ACTUAL EN LA BASE DE DATOS.
                 $datos = array(
-                    'id_marca' => $request->id_marca,
+                    'marca' => $request->marca,
                     'modelo' => $request->modelo,
                     'ano' => $request->ano,
                     'patente' => $request->patente,
                     'version' => $request->version,
                     'ano_compra' => $request->ano_compra,
-                    'sucursal_compra' => $request->sucursal_compra,
+                    'sucursal' => $request->sucursal,
                     'nro_chasis' => $request->nro_chasis,
                     'nro_motor' => $request->nro_motor,
                     'img_1' => $request->img_1,

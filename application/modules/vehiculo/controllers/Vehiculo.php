@@ -15,7 +15,7 @@ class Vehiculo extends CI_Controller
 
     public function index()
     {
-        if (true) {
+        if (!$this->ion_auth->logged_in()) {
             // redirect them to the login page
             redirect('auth/login', 'refresh');
         } else {
@@ -33,7 +33,7 @@ class Vehiculo extends CI_Controller
 
     public function getVehiculo()
     {
-        if (true) {
+        if ($this->ion_auth->logged_in()) {
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
             $request = new stdClass();
             $request->id = null;
@@ -248,7 +248,7 @@ class Vehiculo extends CI_Controller
 
 
 
-            /** CUANDO NO RECIBAMOS UN ID COMO FOREIGN KEY, DEBEMOS ASIGNARLE UN ERROR AL PROCESO, 
+            /** CUANDO NO RECIBAMOS UN ID COMO FOREIGN KEY, DEBEMOS ASIGNARLE UN ERROR AL PROCESO,
         PARA QUE NO HAGA LA INSERCION, DEBIDO A QUE EN LA BASE DE DATOS, ESTOS CAMPOS SON NOT NULL **/
 
             //VERIFICAMOS LAS VARIABLES QUE RECIBIMOS PARA EDITAR.
@@ -459,13 +459,11 @@ class Vehiculo extends CI_Controller
     }
 
 
-
     /****************************************************************/
     /****************************************************************/
     /****************** MOBILE BACKEND API FUNCTIONS ****************/
     /****************************************************************/
     /****************************************************************/
-
 
     public function getVehiculoMobile()
     {
@@ -474,7 +472,7 @@ class Vehiculo extends CI_Controller
             $request = new stdClass();
             $request->id = null;
             $request->data = [];
-
+            $where = '';
             $fecha = date('Y-m-d H:i:s');
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [RESPUESTA]
@@ -484,7 +482,13 @@ class Vehiculo extends CI_Controller
             $response->proceso = 0;
             $response->errores = [];
 
-            if ($query = $this->vehiculo_model->getVehiculoMobile()) {
+            if ($this->input->post('user_id')) {
+              $user_id = $this->security->xss_clean($this->input->post('user_id'));
+              $where = " AND u.id=" . $user_id;
+            }
+
+
+            if ($query = $this->vehiculo_model->getVehiculoMobile($where)) {
                 foreach ($query->result() as $res) {
                     $row = null;
                     $row = new stdClass();
@@ -505,7 +509,7 @@ class Vehiculo extends CI_Controller
             }
             echo json_encode($response);
         } else {
-            redirect('auth/login', 'refresh');
+            redirect('login', 'refresh');
         }
     }
 }

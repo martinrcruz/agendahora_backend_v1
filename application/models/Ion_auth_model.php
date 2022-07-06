@@ -47,27 +47,27 @@ class Ion_auth_model extends CI_Model
 
 	/**
 	 * activation code
-	 * 
+	 *
 	 * Set by deactivate() function
-	 * Also set on register() function, if email_activation 
+	 * Also set on register() function, if email_activation
 	 * option is activated
-	 * 
-	 * This is the value devs should give to the user 
+	 *
+	 * This is the value devs should give to the user
 	 * (in an email, usually)
-	 * 
+	 *
 	 * It contains the *user* version of the activation code
-	 * It's a value of the form "selector.validator" 
-	 * 
+	 * It's a value of the form "selector.validator"
+	 *
 	 * This is not the same activation_code as the one in DB.
 	 * The DB contains a *hashed* version of the validator
 	 * and a selector in another column.
-	 * 
+	 *
 	 * THe selector is not private, and only used to lookup
 	 * the validator.
-	 * 
+	 *
 	 * The validator is private, and to be only known by the user
 	 * So in case of DB leak, nothing could be actually used.
-	 * 
+	 *
 	 * @var string
 	 */
 	public $activation_code;
@@ -393,7 +393,7 @@ class Ion_auth_model extends CI_Model
 	/**
 	 * Get a user by its activation code
 	 *
-	 * @param bool       $user_code	the activation code 
+	 * @param bool       $user_code	the activation code
 	 * 								It's the *user* one, containing "selector.validator"
 	 * 								the one you got in activation_code member
 	 *
@@ -424,7 +424,7 @@ class Ion_auth_model extends CI_Model
 	 * Validates and removes activation code.
 	 *
 	 * @param int|string $id		the user identifier
-	 * @param bool       $code		the *user* activation code 
+	 * @param bool       $code		the *user* activation code
 	 * 								if omitted, simply activate the user without check
 	 *
 	 * @return bool
@@ -944,7 +944,7 @@ class Ion_auth_model extends CI_Model
 				$this->trigger_events(['post_login', 'post_login_successful']);
 				$this->set_message('login_successful');
 
-		
+
 
 
 				return TRUE;
@@ -1833,7 +1833,7 @@ class Ion_auth_model extends CI_Model
 			'value'  => $lang,
 			'expire' => $expire
 		]);
-		
+
 
 		return TRUE;
 	}

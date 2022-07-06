@@ -65,8 +65,12 @@ class Hora_agenda extends CI_Controller
                         $row = new stdClass();
                         $row->id_hora_agenda = $res->id_hora_agenda;
                         $row->id_servicio = $res->id_servicio;
+                        $row->tipo_servicio = $res->tipo_servicio;
                         $row->nombre = $res->nombre;
-                        $row->descripcion = $res->descripcion;
+                        $row->observacion = $res->observacion;
+                        $row->fecha_agenda = $res->fecha_agenda;
+                        $row->agenda_inicio = $res->agenda_inicio;
+                        $row->agenda_fin = $res->agenda_fin;
                         $row->fecha_entrada = $res->fecha_entrada;
                         $row->fecha_salida = $res->fecha_salida;
                         $row->id_usuario_tecnico = $res->id_usuario_tecnico;
@@ -74,9 +78,6 @@ class Hora_agenda extends CI_Controller
                         $row->id_vehiculo = $res->id_vehiculo;
                         $row->id_usuario_cargo = $res->id_usuario_cargo;
                         $row->fecha_creacion = $res->fecha_creacion;
-                        $row->fecha_modificacion = $res->fecha_modificacion;
-                        $row->fecha_baja = $res->fecha_baja;
-                        $row->estado = $res->estado;
 
                         array_push($response->data, $row);
                     }
@@ -111,8 +112,12 @@ class Hora_agenda extends CI_Controller
                     $row = new stdClass();
                     $row->id_hora_agenda = $res->id_hora_agenda;
                     $row->id_servicio = $res->id_servicio;
+                    $row->tipo_servicio = $res->tipo_servicio;
                     $row->nombre = $res->nombre;
-                    $row->descripcion = $res->descripcion;
+                    $row->observacion = $res->observacion;
+                    $row->fecha_agenda = $res->fecha_agenda;
+                    $row->agenda_inicio = $res->agenda_inicio;
+                    $row->agenda_fin = $res->agenda_fin;
                     $row->fecha_entrada = $res->fecha_entrada;
                     $row->fecha_salida = $res->fecha_salida;
                     $row->id_usuario_tecnico = $res->id_usuario_tecnico;
@@ -120,13 +125,66 @@ class Hora_agenda extends CI_Controller
                     $row->id_vehiculo = $res->id_vehiculo;
                     $row->id_usuario_cargo = $res->id_usuario_cargo;
                     $row->fecha_creacion = $res->fecha_creacion;
-                    $row->fecha_modificacion = $res->fecha_modificacion;
-                    $row->fecha_baja = $res->fecha_baja;
-                    $row->estado = $res->estado;
 
                     array_push($response->data, $row);
                 }
             }
+            echo json_encode($response);
+        } else {
+            redirect('auth/login', 'refresh');
+        }
+    }
+
+
+
+    public function getHorasDisponibles($fecha)
+    {
+        if (true) {
+            //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [PETICION]
+            $request = new stdClass();
+            $request->id = null;
+            $request->data = [];
+            $where = '';
+
+
+            //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [RESPUESTA]
+            $response = new stdClass();
+            $response->id = null;
+            $response->data = [];
+            $response->proceso = 0;
+            $response->errores = [];
+
+            if (empty($fecha) || $fecha == null || $fecha == '') {
+                $response->errores[] = "Ocurrió un problema al obtener la fecha";
+            }
+
+            if (sizeof($response->errores) == 0) {
+              $hora8  = 0;
+              $hora9  = 0;
+              $hora10 = 0;
+              $hora11 = 0;
+              $hora12 = 0;
+              $hora13 = 0;
+              $hora14 = 0;
+              $hora15 = 0;
+              $hora16 = 0;
+              $hora17 = 0;
+
+              $this->hora_agenda_model->getHorasDisponibles( " AND agenda_inicio='".$fecha . ' '."08:00:00"."'") ? array_push($response->data, $hora8=1) : array_push($response->data, $hora8);
+              $this->hora_agenda_model->getHorasDisponibles( " AND agenda_inicio='".$fecha . ' '."09:00:00"."'") ? array_push($response->data, $hora9=1) : array_push($response->data, $hora9);
+              $this->hora_agenda_model->getHorasDisponibles( " AND agenda_inicio='".$fecha . ' '."10:00:00"."'") ? array_push($response->data, $hora10=1) : array_push($response->data, $hora10);
+              $this->hora_agenda_model->getHorasDisponibles( " AND agenda_inicio='".$fecha . ' '."11:00:00"."'") ? array_push($response->data, $hora11=1) : array_push($response->data, $hora11);
+              $this->hora_agenda_model->getHorasDisponibles( " AND agenda_inicio='".$fecha . ' '."12:00:00"."'") ? array_push($response->data, $hora12=1) : array_push($response->data, $hora12);
+              $this->hora_agenda_model->getHorasDisponibles( " AND agenda_inicio='".$fecha . ' '."13:00:00"."'") ? array_push($response->data, $hora13=1) : array_push($response->data, $hora13);
+              $this->hora_agenda_model->getHorasDisponibles( " AND agenda_inicio='".$fecha . ' '."14:00:00"."'") ? array_push($response->data, $hora14=1) : array_push($response->data, $hora14);
+              $this->hora_agenda_model->getHorasDisponibles( " AND agenda_inicio='".$fecha . ' '."15:00:00"."'") ? array_push($response->data, $hora15=1) : array_push($response->data, $hora15);
+              $this->hora_agenda_model->getHorasDisponibles( " AND agenda_inicio='".$fecha . ' '."16:00:00"."'") ? array_push($response->data, $hora16=1) : array_push($response->data, $hora16);
+              $this->hora_agenda_model->getHorasDisponibles( " AND agenda_inicio='".$fecha . ' '."17:00:00"."'") ? array_push($response->data, $hora17=1) : array_push($response->data, $hora17);
+
+            }
+
+
+
             echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
@@ -141,6 +199,19 @@ class Hora_agenda extends CI_Controller
             $request = new stdClass();
             $request->id = null;
             $request->data = [];
+            $request->id_servicio = null;
+            $request->tipo_servicio = null;
+            $request->nombre  = null;
+            $request->observacion = null;
+            $request->fecha_agenda  = null;
+            $request->agenda_inicio = null;
+            $request->agenda_fin  = null;
+            $request->fecha_entrada = null;
+            $request->fecha_salida  = null;
+            $request->id_usuario_tecnico  = null;
+            $request->id_cliente  = null;
+            $request->id_vehiculo = null;
+            $request->id_usuario_cargo  = null;
 
             $fecha = date('Y-m-d H:i:s');
 
@@ -153,22 +224,35 @@ class Hora_agenda extends CI_Controller
 
 
 
-            /** CUANDO NO RECIBAMOS UN ID COMO FOREIGN KEY, DEBEMOS ASIGNARLE UN ERROR AL PROCESO,
-        PARA QUE NO HAGA LA INSERCION, DEBIDO A QUE EN LA BASE DE DATOS, ESTOS CAMPOS SON NOT NULL **/
+
 
             //VERIFICAMOS LAS VARIABLES QUE RECIBIMOS PARA EDITAR.
             if (!empty($this->input->post('id_servicio'))) {
                 $request->id_servicio = trim($this->security->xss_clean($this->input->post('id_servicio', true)));
-            } else {
-                $response->errores[] = "Ocurrió un problema al obtener el id_servicio";
+            }
+
+            if (!empty($this->input->post('tipo_servicio'))) {
+                $request->tipo_servicio = trim($this->security->xss_clean($this->input->post('tipo_servicio', true)));
             }
 
             if (!empty($this->input->post('nombre'))) {
                 $request->nombre = trim($this->security->xss_clean($this->input->post('nombre', true)));
             }
 
-            if (!empty($this->input->post('descripcion'))) {
-                $request->descripcion = trim($this->security->xss_clean($this->input->post('descripcion', true)));
+            if (!empty($this->input->post('observacion'))) {
+                $request->observacion = trim($this->security->xss_clean($this->input->post('observacion', true)));
+            }
+
+            if (!empty($this->input->post('fecha_agenda'))) {
+                $request->fecha_agenda = trim($this->security->xss_clean($this->input->post('fecha_agenda', true)));
+            }
+
+            if (!empty($this->input->post('agenda_inicio'))) {
+                $request->agenda_inicio = trim($this->security->xss_clean($this->input->post('agenda_inicio', true)));
+            }
+
+            if (!empty($this->input->post('agenda_fin'))) {
+                $request->agenda_fin = trim($this->security->xss_clean($this->input->post('agenda_fin', true)));
             }
 
             if (!empty($this->input->post('fecha_entrada'))) {
@@ -181,33 +265,29 @@ class Hora_agenda extends CI_Controller
 
             if (!empty($this->input->post('id_usuario_tecnico'))) {
                 $request->id_usuario_tecnico = trim($this->security->xss_clean($this->input->post('id_usuario_tecnico', true)));
-            } else {
-                $response->errores[] = "Ocurrió un problema al obtener el id_usuario_tecnico";
             }
 
             if (!empty($this->input->post('id_cliente'))) {
                 $request->id_cliente = trim($this->security->xss_clean($this->input->post('id_cliente', true)));
-            } else {
-                $response->errores[] = "Ocurrió un problema al obtener el id_cliente";
             }
 
             if (!empty($this->input->post('id_vehiculo'))) {
                 $request->id_vehiculo = trim($this->security->xss_clean($this->input->post('id_vehiculo', true)));
-            } else {
-                $response->errores[] = "Ocurrió un problema al obtener el id_vehiculo";
             }
 
             if (!empty($this->input->post('id_usuario_cargo'))) {
                 $request->id_usuario_cargo = trim($this->security->xss_clean($this->input->post('id_usuario_cargo', true)));
-            } else {
-                $response->errores[] = "Ocurrió un problema al obtener el id_usuario_cargo";
             }
 
             //ALMACENAMOS LOS DATOS QUE VIENEN DEL POST, QUE REEMPLAZARAN A LA FILA ACTUAL EN LA BASE DE DATOS.
             $datos = array(
                 'id_servicio' => $request->id_servicio,
+                'tipo_servicio' => $request->tipo_servicio,
                 'nombre' => $request->nombre,
-                'descripcion' => $request->descripcion,
+                'observacion' => $request->observacion,
+                'fecha_agenda' => $request->fecha_agenda,
+                'agenda_inicio' => $request->agenda_inicio,
+                'agenda_fin' => $request->agenda_fin,
                 'fecha_entrada' => $request->fecha_entrada,
                 'fecha_salida' => $request->fecha_salida,
                 'id_usuario_tecnico' => $request->id_usuario_tecnico,
@@ -266,8 +346,8 @@ class Hora_agenda extends CI_Controller
                 if (!empty($this->input->post('nombre'))) {
                     $request->nombre = trim($this->security->xss_clean($this->input->post('nombre', true)));
                 }
-                if (!empty($this->input->post('descripcion'))) {
-                    $request->descripcion = trim($this->security->xss_clean($this->input->post('descripcion', true)));
+                if (!empty($this->input->post('observacion'))) {
+                    $request->observacion = trim($this->security->xss_clean($this->input->post('observacion', true)));
                 }
                 if (!empty($this->input->post('fecha_entrada'))) {
                     $request->fecha_entrada = trim($this->security->xss_clean($this->input->post('fecha_entrada', true)));
@@ -294,7 +374,7 @@ class Hora_agenda extends CI_Controller
                 $datos = array(
                     'id_servicio' => $request->id_servicio,
                     'nombre' => $request->nombre,
-                    'descripcion' => $request->descripcion,
+                    'observacion' => $request->observacion,
                     'fecha_entrada' => $request->fecha_entrada,
                     'fecha_salida' => $request->fecha_salida,
                     'id_usuario_tecnico' => $request->id_usuario_tecnico,

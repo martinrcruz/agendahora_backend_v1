@@ -8,9 +8,9 @@ class Servicio_model extends CI_Model
     }
     public function getServicio($where='')
     {
-        $sql = "SELECT * FROM servicio WHERE ESTADO=1 $where;";
+        $sql = "SELECT * FROM servicio s JOIN users u ON u.id=s.id_cliente WHERE ESTADO=1 $where;";
         $query = $this->db->query($sql);
-        //var_dump($this->db->last_query());
+        // var_dump($this->db->last_query());
 
         if ($query->num_rows() > 0)
             return $query;

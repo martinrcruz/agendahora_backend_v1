@@ -1,8 +1,12 @@
 <?php
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Headers: *');
 
+$http_origin = $_SERVER['HTTP_ORIGIN'];
+
+if ($http_origin == "http://localhost:8100" || $http_origin == "http://localhost:4200") {
+	header("Access-Control-Allow-Origin: $http_origin");
+}
 /**
  * CodeIgniter
  *

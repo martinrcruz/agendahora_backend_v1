@@ -8,9 +8,16 @@ class Solicitud_vehiculo_model extends CI_Model
     }
     public function getSolicitudVehiculo($where='')
     {
-        $sql = "SELECT * FROM solicitud_vehiculo WHERE ESTADO=1 $where;";
+        $sql = "SELECT sv.*,
+        ma.nombre as marca,
+        mo.nombre as modelo
+        FROM solicitud_vehiculo sv
+        JOIN marca ma on ma.id_marca=sv.marca
+        JOIN modelo mo on mo.id_modelo=sv.modelo
+        WHERE sv.ESTADO=1 $where
+        ORDER BY id_solicitud_vehiculo desc;";
         $query = $this->db->query($sql);
-        //var_dump($this->db->last_query());
+        // var_dump($this->db->last_query());
 
         if ($query->num_rows() > 0)
             return $query;
@@ -22,7 +29,7 @@ class Solicitud_vehiculo_model extends CI_Model
     {
         $query = $this->db->insert($tabla, $data);
 		if ($query)
-			return $this->db->insert_id(); 
+			return $this->db->insert_id();
 		else
 			return false;
     }
