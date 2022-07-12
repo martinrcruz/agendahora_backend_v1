@@ -6,7 +6,7 @@ class Modelo_model extends CI_Model
     {
         parent::__construct();
     }
-    public function getModelo($where)
+    public function getModelo($where='')
     {
         $sql = "SELECT * FROM modelo WHERE ESTADO=1 $where;";
         $query = $this->db->query($sql);

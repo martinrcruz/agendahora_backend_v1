@@ -172,31 +172,35 @@ class Historial_servicio extends CI_Controller
                     $row = null;
                     $row = new stdClass();
                     $row->id_historial_servicio = $res->id_historial_servicio;
-                    $row->nombre = $res->nombre;
-                    $row->descripcion = $res->descripcion;
+                    $row->nombre_servicio = $res->nombre_servicio;
+                    $row->tipo_servicio = $res->tipo_servicio;
+
+                    $row->observacion = $res->observacion;
                     $row->detalle = $res->detalles;
+
+                    $row->nombre_supervisor = $res->nombre_supervisor;
+                    $row->id_supervisor = $res->id_supervisor;
+                    $row->id_tecnico = $res->nombre_tecnico;
+                    $row->id_tecnico = $res->id_tecnico;
+                    $row->id_cliente = $res->id_cliente;
+                    $row->nombre_cliente = $res->nombre_cliente;
+
+                    $row->id_vehiculo = $res->id_vehiculo;
+                    $row->estado_servicio = $res->estado_servicio;
+
                     $row->fecha_entrada = date('d-m-Y H:s', strtotime($res->fecha_entrada));
                     $row->fecha_salida = date('d-m-Y H:s', strtotime($res->fecha_salida));
 
-                    $fecha_agenda = date('d-m-Y', strtotime($res->fecha_agenda));
-                    $hora_agenda = date('H:s', strtotime($res->hora_agenda));
+                    $row->fecha_agenda = $res->fecha_agenda;
+                    $row->agenda_inicio = $res->agenda_inicio;
+                    $row->agenda_fin = $res->agenda_fin;
 
-                    $row->fecha_agenda = $fecha_agenda . ' ' . $hora_agenda;
-                    $row->id_vehiculo = $res->id_vehiculo;
-                    $row->id_tecnico = $res->id_tecnico;
-                    $row->nombre_tecnico = $res->nombre_tecnico;
-                    $row->id_cliente = $res->id_cliente;
-                    $row->nombre_cliente = $res->nombre_cliente;
-                    $row->id_supervisor = $res->id_supervisor;
-                    $row->nombre_supervisor = $res->nombre_supervisor;
                     $row->marca = $res->marca;
                     $row->modelo = $res->modelo;
                     $row->version = $res->version;
-                    $row->estado_servicio = $res->estado_servicio;
 
                     $row->fecha_creacion = $res->fecha_creacion;
-                    $row->fecha_modificacion = $res->fecha_modificacion;
-                    $row->fecha_baja = $res->fecha_baja;
+
                     $row->estado = $res->estado;
                     array_push($response->data, $row);
                 }

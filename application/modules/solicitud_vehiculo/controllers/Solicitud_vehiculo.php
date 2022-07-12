@@ -96,7 +96,7 @@ class Solicitud_vehiculo extends CI_Controller
             $request = new stdClass();
             $request->id = null;
             $request->data = [];
-
+            $user_id = null;
 			      $fecha = date('Y-m-d H:i:s');
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [RESPUESTA]
@@ -107,12 +107,12 @@ class Solicitud_vehiculo extends CI_Controller
             $response->errores = [];
 
             if ($this->input->post('user_id')) {
-                $request->user_id = trim($this->security->xss_clean($this->input->post('user_id', true)));
+                $user_id = trim($this->security->xss_clean($this->input->post('user_id', true)));
             } else { //SI NO, ALMACENAMOS EL ERROR EN UN ARRAY PARA DEVOLVERLO COMO RESPUESTA.
                 $response->errores[] = "Ocurrió un problema al obtener el id de usuario";
             }
 
-            $request->user_id ? $where = " AND id_cliente=$request->user_id" : $where = '';
+            $user_id ? $where = " AND id_cliente=$user_id" : $where = '';
 
 
             if ($query = $this->solicitud_vehiculo_model->getSolicitudVehiculo($where)) {

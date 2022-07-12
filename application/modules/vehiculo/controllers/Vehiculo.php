@@ -57,8 +57,10 @@ class Vehiculo extends CI_Controller
                     $row->marca = $res->marca;
                     $row->modelo = $res->modelo;
                     $row->version = $res->version;
+                    $row->ano = $res->ano;
                     $row->patente = $res->patente;
                     $row->id_cliente = $res->id_cliente;
+                    $row->nombre_cliente = $res->nombre_cliente;
                     $row->color = $res->color;
                     $row->fecha_creacion = $res->fecha_creacion;
                     $row->fecha_modificacion = $res->fecha_modificacion;
@@ -149,6 +151,8 @@ class Vehiculo extends CI_Controller
                     $row->nombre = $res->nombre;
                     $row->marca = $res->marca;
                     $row->modelo = $res->modelo;
+                    $row->version = $res->version;
+                    $row->ano = $res->ano;
                     $row->patente = $res->patente;
                     $row->id_cliente = $res->id_cliente;
                     $row->nombre_cliente = $res->nombre_cliente;
@@ -209,8 +213,10 @@ class Vehiculo extends CI_Controller
                         $row->marca = $res->marca;
                         $row->modelo = $res->modelo;
                         $row->version = $res->version;
+                        $row->ano = $res->ano;
                         $row->patente = $res->patente;
                         $row->id_cliente = $res->id_cliente;
+                        $row->nombre_cliente = $res->nombre_cliente;
                         $row->color = $res->color;
                         $row->fecha_creacion = $res->fecha_creacion;
                         $row->fecha_modificacion = $res->fecha_modificacion;
@@ -270,7 +276,9 @@ class Vehiculo extends CI_Controller
             if (!empty($this->input->post('version'))) {
                 $request->version = $this->security->xss_clean($this->input->post('version'));
             }
-
+            if (!empty($this->input->post('ano'))) {
+                $request->ano = $this->security->xss_clean($this->input->post('ano'));
+            }
             if (!empty($this->input->post('patente'))) {
                 $request->patente = $this->security->xss_clean($this->input->post('patente'));
             }
@@ -292,6 +300,7 @@ class Vehiculo extends CI_Controller
                 'marca' => $request->marca,
                 'modelo' => $request->modelo,
                 'version' => $request->version,
+                'ano' => $request->ano,
                 'patente' => $request->patente,
                 'id_cliente' => $request->id_cliente,
                 'color' => $request->color,
@@ -361,7 +370,9 @@ class Vehiculo extends CI_Controller
                 if (!empty($this->input->post('patente'))) {
                     $request->patente = $this->security->xss_clean($this->input->post('patente'));
                 }
-
+                if (!empty($this->input->post('ano'))) {
+                    $request->ano = $this->security->xss_clean($this->input->post('ano'));
+                }
                 if (!empty($this->input->post('id_cliente'))) {
                     $request->id_cliente = $this->security->xss_clean($this->input->post('id_cliente'));
                 } else {
@@ -380,6 +391,7 @@ class Vehiculo extends CI_Controller
                     'marca' => $request->marca,
                     'modelo' => $request->modelo,
                     'version' => $request->version,
+                    'ano' => $request->ano,
                     'patente' => $request->patente,
                     'id_cliente' => $request->id_cliente,
                     'color' => $request->color,
@@ -496,7 +508,8 @@ class Vehiculo extends CI_Controller
                     $row->nombre_vehiculo = $res->nombre_vehiculo;
                     $row->nombre_marca = $res->nombre_marca;
                     $row->nombre_modelo = $res->nombre_modelo;
-                    // $row->nombre_version = $res->nombre_version;
+                    $row->nombre_version = $res->nombre_version;
+                    $row->ano = $res->ano;
                     $row->ultimo_servicio = date('d-m-Y', strtotime($res->ultimo_servicio));
                     $row->detalle_ultimo_servicio = $res->detalle_ultimo_servicio;
                     $row->patente = $res->patente;

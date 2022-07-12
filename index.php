@@ -1,10 +1,9 @@
 <?php
 header('Access-Control-Allow-Credentials: true');
-header('Access-Control-Allow-Origin: *');
 
 $http_origin = $_SERVER['HTTP_ORIGIN'];
 
-if ($http_origin == "http://localhost:8100" || $http_origin == "http://localhost:4200") {
+if ($http_origin == "http://localhost:8100" || $http_origin == "http://localhost:8101" ||$http_origin == "http://localhost:4200" || $http_origin === "http://localhost" || $http_origin === "http://10.0.2.2"  || $http_origin === "10.0.2.2") {
 	header("Access-Control-Allow-Origin: $http_origin");
 }
 /**

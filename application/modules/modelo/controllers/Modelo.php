@@ -65,6 +65,8 @@ class Modelo extends CI_Controller
                         $row = null;
                         $row = new stdClass();
                         $row->id_modelo = $res->id_modelo;
+                        $row->id_marca = $res->id_marca;
+                        $row->descripcion = $res->descripcion;
                         $row->nombre = $res->nombre;
                         $row->logo = $res->logo;
                         $row->fecha_creacion = $res->fecha_creacion;
@@ -91,7 +93,7 @@ class Modelo extends CI_Controller
             $request->data = [];
 
             $fecha = date('Y-m-d H:i:s');
-            $where = '';
+           // $where = '';
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [RESPUESTA]
             $response = new stdClass();
             $response->id = null;
@@ -100,20 +102,22 @@ class Modelo extends CI_Controller
             $response->errores = [];
 
 
-            if (is_numeric($this->input->post('marca'))) {
-                $request->id = trim($this->security->xss_clean($this->input->post('marca', true)));
-            } else { //SI NO, ALMACENAMOS EL ERROR EN UN ARRAY PARA DEVOLVERLO COMO RESPUESTA.
-                $response->errores[] = "Ocurrió un problema al obtener la solicitud";
-            }
+            // if (is_numeric($this->input->post('marca'))) {
+            //     $request->id = trim($this->security->xss_clean($this->input->post('marca', true)));
+            // } else { //SI NO, ALMACENAMOS EL ERROR EN UN ARRAY PARA DEVOLVERLO COMO RESPUESTA.
+            //     $response->errores[] = "Ocurrió un problema al obtener la solicitud";
+            // }
 
 
-            $where = " AND id_marca=$marca";
+           $marca ? $where = " AND id_marca=$marca" : $where ='';
 
             if ($query = $this->modelo_model->getModelo($where)) {
                 foreach ($query->result() as $res) {
                     $row = null;
                     $row = new stdClass();
                     $row->id_modelo = $res->id_modelo;
+                    $row->id_marca = $res->id_marca;
+                    $row->descripcion = $res->descripcion;
                     $row->nombre = $res->nombre;
                     $row->logo = $res->logo;
                     $row->fecha_creacion = $res->fecha_creacion;
@@ -150,7 +154,7 @@ class Modelo extends CI_Controller
 
 
 
-            /** CUANDO NO RECIBAMOS UN ID COMO FOREIGN KEY, DEBEMOS ASIGNARLE UN ERROR AL PROCESO, 
+            /** CUANDO NO RECIBAMOS UN ID COMO FOREIGN KEY, DEBEMOS ASIGNARLE UN ERROR AL PROCESO,
         PARA QUE NO HAGA LA INSERCION, DEBIDO A QUE EN LA BASE DE DATOS, ESTOS CAMPOS SON NOT NULL **/
 
             //VERIFICAMOS LAS VARIABLES QUE RECIBIMOS PARA EDITAR.
@@ -161,11 +165,15 @@ class Modelo extends CI_Controller
             if (!empty($this->input->post('logo'))) {
                 $request->logo = trim($this->security->xss_clean($this->input->post('logo', true)));
             }
+            if (!empty($this->input->post('descripcion'))) {
+                $request->descripcion = trim($this->security->xss_clean($this->input->post('descripcion', true)));
+            }
 
             //ALMACENAMOS LOS DATOS QUE VIENEN DEL POST, QUE REEMPLAZARAN A LA FILA ACTUAL EN LA BASE DE DATOS.
             $datos = array(
                 'nombre' => $request->nombre,
                 'logo' => $request->logo,
+                'descripcion' => $request->descripcion,
                 'fecha_creacion' => $fecha,
                 'estado' => 1
             );
@@ -179,7 +187,7 @@ class Modelo extends CI_Controller
                 $response->errores[] = "El dato no pudo ser ingresado";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }
@@ -214,15 +222,21 @@ class Modelo extends CI_Controller
                 if (!empty($this->input->post('nombre'))) {
                     $request->nombre = trim($this->security->xss_clean($this->input->post('nombre', true)));
                 }
-
                 if (!empty($this->input->post('logo'))) {
                     $request->logo = trim($this->security->xss_clean($this->input->post('logo', true)));
                 }
-
+                if (!empty($this->input->post('descripcion'))) {
+                    $request->descripcion = trim($this->security->xss_clean($this->input->post('descripcion', true)));
+                }
+                if (!empty($this->input->post('id_marca'))) {
+                    $request->id_marca = trim($this->security->xss_clean($this->input->post('id_marca', true)));
+                }
                 //ALMACENAMOS LOS DATOS QUE VIENEN DEL POST, QUE REEMPLAZARAN A LA FILA ACTUAL EN LA BASE DE DATOS.
                 $datos = array(
                     'nombre' => $request->nombre,
                     'logo' => $request->logo,
+                    'descripcion' => $request->descripcion,
+                    'id_marca' => $request->id_marca,
                     'fecha_modificacion' => $fecha,
                 );
             }
@@ -238,7 +252,7 @@ class Modelo extends CI_Controller
                 $response->errores[] = "Ocurrió un problema al procesar la edicion";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }
@@ -277,7 +291,7 @@ class Modelo extends CI_Controller
                 $response->errores[] = "Ocurrió un problema al procesar la eliminacion";
             }
 
-            print_r($response);
+            echo json_encode($response);
         } else {
             redirect('auth/login', 'refresh');
         }

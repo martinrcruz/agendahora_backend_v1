@@ -97,7 +97,7 @@ class Cliente extends CI_Controller
             $request->id = null;
             $request->data = [];
 
-			$fecha = date('Y-m-d H:i:s');
+			         $fecha = date('Y-m-d H:i:s');
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [RESPUESTA]
             $response = new stdClass();
@@ -155,7 +155,7 @@ class Cliente extends CI_Controller
 
 
 
-            /** CUANDO NO RECIBAMOS UN ID COMO FOREIGN KEY, DEBEMOS ASIGNARLE UN ERROR AL PROCESO, 
+            /** CUANDO NO RECIBAMOS UN ID COMO FOREIGN KEY, DEBEMOS ASIGNARLE UN ERROR AL PROCESO,
         PARA QUE NO HAGA LA INSERCION, DEBIDO A QUE EN LA BASE DE DATOS, ESTOS CAMPOS SON NOT NULL **/
 
             //VERIFICAMOS LAS VARIABLES QUE RECIBIMOS PARA EDITAR.
@@ -174,13 +174,13 @@ class Cliente extends CI_Controller
             }
             if (!empty($this->input->post('rut'))) {
                 $request->rut = trim($this->security->xss_clean($this->input->post('rut', true)));
-            } 
+            }
             if (!empty($this->input->post('numero_contacto'))) {
                 $request->numero_contacto = trim($this->security->xss_clean($this->input->post('numero_contacto', true)));
-            } 
+            }
             if (!empty($this->input->post('direccion'))) {
                 $request->direccion = trim($this->security->xss_clean($this->input->post('direccion', true)));
-            } 
+            }
             if (!empty($this->input->post('sucursal'))) {
                 $request->sucursal = trim($this->security->xss_clean($this->input->post('sucursal', true)));
             } else {
@@ -188,10 +188,10 @@ class Cliente extends CI_Controller
             }
             if (!empty($this->input->post('nombre_usuario'))) {
                 $request->nombre_usuario = trim($this->security->xss_clean($this->input->post('nombre_usuario', true)));
-            } 
+            }
             if (!empty($this->input->post('contrasena'))) {
                 $request->contrasena = trim($this->security->xss_clean($this->input->post('contrasena', true)));
-            } 
+            }
 
             //ALMACENAMOS LOS DATOS QUE VIENEN DEL POST, QUE REEMPLAZARAN A LA FILA ACTUAL EN LA BASE DE DATOS.
             $datos = array(
@@ -263,24 +263,24 @@ class Cliente extends CI_Controller
                 }
                 if (!empty($this->input->post('rut'))) {
                     $request->rut = trim($this->security->xss_clean($this->input->post('rut', true)));
-                } 
+                }
                 if (!empty($this->input->post('numero_contacto'))) {
                     $request->numero_contacto = trim($this->security->xss_clean($this->input->post('numero_contacto', true)));
-                } 
+                }
                 if (!empty($this->input->post('direccion'))) {
                     $request->direccion = trim($this->security->xss_clean($this->input->post('direccion', true)));
-                } 
+                }
                 if (!empty($this->input->post('sucursal'))) {
                     $request->sucursal = trim($this->security->xss_clean($this->input->post('sucursal', true)));
                 }else {
                 $response->errores[] = "Ocurrió un problema al obtener el id_vehiculo";
-            } 
+            }
                 if (!empty($this->input->post('nombre_usuario'))) {
                     $request->nombre_usuario = trim($this->security->xss_clean($this->input->post('nombre_usuario', true)));
-                } 
+                }
                 if (!empty($this->input->post('contrasena'))) {
                     $request->contrasena = trim($this->security->xss_clean($this->input->post('contrasena', true)));
-                } 
+                }
 
 
 

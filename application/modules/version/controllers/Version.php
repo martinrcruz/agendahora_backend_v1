@@ -93,7 +93,7 @@ class Version extends CI_Controller
             $request->id = null;
             $request->data = [];
 
-			$fecha = date('Y-m-d H:i:s');
+			      $fecha = date('Y-m-d H:i:s');
 
             //DECLARACION DE VARIABLES, OBJETOS Y ARRAYS DE [RESPUESTA]
             $response = new stdClass();
@@ -101,8 +101,8 @@ class Version extends CI_Controller
             $response->data = [];
             $response->proceso = 0;
             $response->errores = [];
-            
-            $where = " AND id_modelo=$modelo";
+
+            $modelo ? $where = " AND id_modelo=$modelo" : $where ="";
 
             if ($query = $this->version_model->getVersion($where)) {
                 foreach ($query->result() as $res) {
@@ -147,17 +147,23 @@ class Version extends CI_Controller
 
 
 
-            /** CUANDO NO RECIBAMOS UN ID COMO FOREIGN KEY, DEBEMOS ASIGNARLE UN ERROR AL PROCESO, 
+            /** CUANDO NO RECIBAMOS UN ID COMO FOREIGN KEY, DEBEMOS ASIGNARLE UN ERROR AL PROCESO,
         PARA QUE NO HAGA LA INSERCION, DEBIDO A QUE EN LA BASE DE DATOS, ESTOS CAMPOS SON NOT NULL **/
 
             //VERIFICAMOS LAS VARIABLES QUE RECIBIMOS PARA EDITAR.
             if (!empty($this->input->post('nombre'))) {
                 $request->nombre = trim($this->security->xss_clean($this->input->post('nombre', true)));
             }
-
             if (!empty($this->input->post('descripcion'))) {
                 $request->descripcion = trim($this->security->xss_clean($this->input->post('descripcion', true)));
             }
+            if (!empty($this->input->post('id_marca'))) {
+                $request->id_marca = trim($this->security->xss_clean($this->input->post('id_marca', true)));
+            }
+            if (!empty($this->input->post('id_modelo'))) {
+                $request->id_modelo = trim($this->security->xss_clean($this->input->post('id_modelo', true)));
+            }
+
 
             //ALMACENAMOS LOS DATOS QUE VIENEN DEL POST, QUE REEMPLAZARAN A LA FILA ACTUAL EN LA BASE DE DATOS.
             $datos = array(
@@ -213,7 +219,7 @@ class Version extends CI_Controller
                 if (!empty($this->input->post('nombre'))) {
                     $request->nombre = trim($this->security->xss_clean($this->input->post('nombre', true)));
                 }
-    
+
                 if (!empty($this->input->post('descripcion'))) {
                     $request->descripcion = trim($this->security->xss_clean($this->input->post('descripcion', true)));
                 }
